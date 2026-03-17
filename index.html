@@ -3,89 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語聲調 - 基礎測試版</title>
+    <title>華語聲調練習 - Level 1</title>
     <style>
-        body { 
-            font-family: sans-serif; 
-            text-align: center; 
-            margin-top: 50px; 
-            background-color: #f9f9f9;
+        :root {
+            --primary-color: #4A90E2;
+            --correct-color: #28a745;
+            --wrong-color: #dc3545;
+            --bg-color: #F5F7FA;
+            --card-bg: #FFFFFF;
         }
-        .container {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .game-container {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            width: 90%;
             max-width: 400px;
-            margin: 0 auto;
+            padding: 24px;
+            text-align: center;
         }
-        .btn { 
-            padding: 15px 20px; 
-            font-size: 18px; 
-            margin: 10px; 
-            cursor: pointer; 
+        .header-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            font-size: 0.9em;
+            color: #666;
+            font-weight: bold;
+        }
+        .level-badge {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+        .question-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
             border-radius: 8px;
-            border: 1px solid #ccc;
-            background-color: white;
+            margin-bottom: 16px;
+            background-color: #e0e0e0;
+            border: 2px solid #eee;
         }
-        .btn:hover { background-color: #f0f0f0; }
         .play-btn {
             background-color: #4CAF50;
             color: white;
             border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.2em;
+            cursor: pointer;
             width: 100%;
             margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: background-color 0.2s;
         }
         .play-btn:hover { background-color: #45a049; }
-        #result { 
-            margin-top: 20px; 
-            font-size: 20px; 
-            font-weight: bold; 
-            min-height: 30px;
+        .play-btn:active { transform: translateY(2px); }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .option-btn {
+            background-color: #f8f9fa;
+            border: 2px solid #dee2e6;
+            padding: 15px 10px;
+            font-size: 1.2em;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .option-btn:hover { background-color: #e2e6ea; }
+        .option-btn.correct {
+            background-color: #d4edda;
+            border-color: var(--correct-color);
+            color: #155724;
+        }
+        .option-btn.wrong {
+            background-color: #f8d7da;
+            border-color: var(--wrong-color);
+            color: #721c24;
+            animation: shake 0.4s;
+        }
+        
+        .answer-reveal {
+            display: none;
+            background-color: #fff3cd;
+            border: 1px solid #ffeeba;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        .answer-reveal h3 { margin: 0 0 5px 0; font-size: 1.8em; color: #856404; }
+        .answer-reveal p { margin: 0; color: #856404; }
+        
+        .next-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+            width: 100%;
+            display: none;
+        }
+        .next-btn:hover { background-color: #357ABD; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h2>華語聲調練習</h2>
-        <p style="font-size: 24px;">字彙：<strong>大</strong> (big)</p>
-
-        <button class="btn play-btn" onclick="playSound()">🔊 聽發音</button>
-
-        <hr style="margin: 20px 0;">
-
-        <p>請選擇正確的拼音：</p>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-            <button class="btn" onclick="checkAnswer('dā')">dā</button>
-            <button class="btn" onclick="checkAnswer('dá')">dá</button>
-            <button class="btn" onclick="checkAnswer('dǎ')">dǎ</button>
-            <button class="btn" onclick="checkAnswer('dà')">dà</button>
-        </div>
-
-        <div id="result"></div>
+<div class="game-container">
+    <div class="header-info">
+        <span class="level-badge">Level 1: 單音節</span>
+        <span id="progress-text">1 / 10</span>
     </div>
+    
+    <img id="question-image" class="question-image" src="" alt="Question Image">
+    
+    <button class="play-btn" onclick="playSound()">🔊 聽發音</button>
+    
+    <div class="options-grid" id="options-container">
+        </div>
+    
+    <div class="answer-reveal" id="answer-reveal">
+        <h3 id="reveal-char">大</h3>
+        <p id="reveal-meaning">big (第四聲)</p>
+    </div>
+    
+    <button class="next-btn" id="next-btn" onclick="nextQuestion()">下一題 ➔</button>
+</div>
 
-    <script>
-        // 呼叫瀏覽器內建語音來念出中文字
-        function playSound() {
-            let utterance = new SpeechSynthesisUtterance("大");
-            utterance.lang = "zh-TW";
-            speechSynthesis.speak(utterance);
-        }
+<script>
+    // 題庫資料 (來自 Sinosplice)
+    const questions = [
+        { ch: "大", meaning: "big (第四聲 dà)", tones: ["dā", "dá", "dǎ", "dà"], correctIndex: 3, img: "https://images.unsplash.com/photo-1552611052-33e04de081de?w=400" },
+        { ch: "好", meaning: "good (第三聲 hǎo)", tones: ["hāo", "háo", "hǎo", "hào"], correctIndex: 2, img: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=400" },
+        { ch: "新", meaning: "new (第一聲 xīn)", tones: ["xīn", "xín", "xǐn", "xìn"], correctIndex: 0, img: "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=400" },
+        { ch: "忙", meaning: "busy (第二聲 máng)", tones: ["māng", "máng", "mǎng", "màng"], correctIndex: 1, img: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400" },
+        { ch: "黑", meaning: "dark (第一聲 hēi)", tones: ["hēi", "héi", "hěi", "hèi"], correctIndex: 0, img: "https://images.unsplash.com/photo-1505506874110-6a7a69069a08?w=400" },
+        { ch: "紅", meaning: "red (第二聲 hóng)", tones: ["hōng", "hóng", "hǒng", "hòng"], correctIndex: 1, img: "https://images.unsplash.com/photo-1531515949175-7fce639daff8?w=400" },
+        { ch: "冷", meaning: "cold (第三聲 lěng)", tones: ["lēng", "léng", "lěng", "lèng"], correctIndex: 2, img: "https://images.unsplash.com/photo-1445543949571-ffc3e0e2f55e?w=400" },
+        { ch: "熱", meaning: "hot (第四聲 rè)", tones: ["rē", "ré", "rě", "rè"], correctIndex: 3, img: "https://images.unsplash.com/photo-1504630083234-14187a9df0f5?w=400" },
+        { ch: "酸", meaning: "sour (第一聲 suān)", tones: ["suān", "suán", "suǎn", "suàn"], correctIndex: 0, img: "https://images.unsplash.com/photo-1528659546026-644bfba2ec29?w=400" },
+        { ch: "貴", meaning: "expensive (第四聲 guì)", tones: ["guī", "guí", "guǐ", "guì"], correctIndex: 3, img: "https://images.unsplash.com/photo-1607622746419-f9f30be6fc2f?w=400" }
+    ];
 
-        // 檢查答案邏輯
-        function checkAnswer(answer) {
-            let resultDiv = document.getElementById("result");
-            if (answer === 'dà') {
-                resultDiv.style.color = "green";
-                resultDiv.innerText = "✅ 答對了！是第四聲 dà";
-            } else {
-                resultDiv.style.color = "red";
-                resultDiv.innerText = "❌ 不對喔，再聽一次試試看！";
-            }
+    let currentIndex = 0;
+    let isAnswered = false;
+
+    function loadQuestion() {
+        isAnswered = false;
+        const q = questions[currentIndex];
+        
+        // 更新進度與圖片
+        document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${questions.length}`;
+        document.getElementById('question-image').src = q.img;
+        
+        // 隱藏答案區與下一題按鈕
+        document.getElementById('answer-reveal').style.display = "none";
+        document.getElementById('next-btn').style.display = "none";
+        
+        // 生成四個選項
+        const optionsContainer = document.getElementById('options-container');
+        optionsContainer.innerHTML = "";
+        
+        q.tones.forEach((pinyin, index) => {
+            const btn = document.createElement('button');
+            btn.className = 'option-btn';
+            btn.innerText = pinyin;
+            btn.onclick = () => checkAnswer(index, btn);
+            optionsContainer.appendChild(btn);
+        });
+
+        // 題目載入時自動唸一次 (若瀏覽器允許)
+        // playSound(); 
+    }
+
+    function playSound() {
+        const q = questions[currentIndex];
+        let utterance = new SpeechSynthesisUtterance(q.ch);
+        utterance.lang = "zh-TW";
+        utterance.rate = 0.8; // 放慢一點語速讓初學者聽清楚
+        speechSynthesis.speak(utterance);
+    }
+
+    function checkAnswer(selectedIndex, btnElement) {
+        if (isAnswered) return;
+        
+        const q = questions[currentIndex];
+        
+        if (selectedIndex === q.correctIndex) {
+            // 答對處理
+            btnElement.classList.add('correct');
+            isAnswered = true;
+            
+            // 顯示中文答案區塊
+            const revealBox = document.getElementById('answer-reveal');
+            document.getElementById('reveal-char').innerText = q.ch;
+            document.getElementById('reveal-meaning').innerText = q.meaning;
+            revealBox.style.display = "block";
+            
+            document.getElementById('next-btn').style.display = "block";
+        } else {
+            // 答錯處理
+            btnElement.classList.add('wrong');
+            setTimeout(() => {
+                btnElement.classList.remove('wrong');
+            }, 400); // 動畫結束後移除 class 允許再次點擊
         }
-    </script>
+    }
+
+    function nextQuestion() {
+        currentIndex++;
+        if (currentIndex < questions.length) {
+            loadQuestion();
+        } else {
+            document.querySelector('.game-container').innerHTML = `
+                <h2 style="color: #4A90E2;">🎉 恭喜通關！</h2>
+                <p>你完成了 Level 1 的單音節挑戰！</p>
+                <button class="next-btn" style="display:block; margin-top:20px;" onclick="location.reload()">再玩一次 ↺</button>
+            `;
+        }
+    }
+
+    // 啟動遊戲
+    window.onload = loadQuestion;
+</script>
 
 </body>
 </html>
