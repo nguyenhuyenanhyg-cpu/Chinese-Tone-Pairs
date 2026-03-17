@@ -3,90 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語聲調挑戰</title>
+    <title>華語聲調 - 基礎測試版</title>
     <style>
-        :root {
-            --primary-color: #4A90E2;
-            --bg-color: #F5F7FA;
-            --text-color: #333;
-            --card-bg: #FFFFFF;
+        body { 
+            font-family: sans-serif; 
+            text-align: center; 
+            margin-top: 50px; 
+            background-color: #f9f9f9;
         }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .game-container {
-            background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 90%;
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             max-width: 400px;
-            padding: 24px;
-            text-align: center;
+            margin: 0 auto;
         }
-        .level-badge {
-            background-color: var(--primary-color);
+        .btn { 
+            padding: 15px 20px; 
+            font-size: 18px; 
+            margin: 10px; 
+            cursor: pointer; 
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: white;
+        }
+        .btn:hover { background-color: #f0f0f0; }
+        .play-btn {
+            background-color: #4CAF50;
             color: white;
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.9em;
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-        .question-image {
+            border: none;
             width: 100%;
-            height: 200px;
-            object-fit: cover;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            background-color: #e0e0e0; /* 圖片尚未載入時的底色 */
+            margin-bottom: 20px;
         }
-        .vocab-text {
-            font-size: 2em;
-            font-weight: bold;
-            margin: 8px 0;
+        .play-btn:hover { background-color: #45a049; }
+        #result { 
+            margin-top: 20px; 
+            font-size: 20px; 
+            font-weight: bold; 
+            min-height: 30px;
         }
-        .vocab-meaning {
-            color: #666;
-            margin-bottom: 24px;
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>華語聲調練習</h2>
+        <p style="font-size: 24px;">字彙：<strong>大</strong> (big)</p>
+
+        <button class="btn play-btn" onclick="playSound()">🔊 聽發音</button>
+
+        <hr style="margin: 20px 0;">
+
+        <p>請選擇正確的拼音：</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="btn" onclick="checkAnswer('dā')">dā</button>
+            <button class="btn" onclick="checkAnswer('dá')">dá</button>
+            <button class="btn" onclick="checkAnswer('dǎ')">dǎ</button>
+            <button class="btn" onclick="checkAnswer('dà')">dà</button>
+        </div>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // 呼叫瀏覽器內建語音來念出中文字
+        function playSound() {
+            let utterance = new SpeechSynthesisUtterance("大");
+            utterance.lang = "zh-TW";
+            speechSynthesis.speak(utterance);
         }
-        .options-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
+
+        // 檢查答案邏輯
+        function checkAnswer(answer) {
+            let resultDiv = document.getElementById("result");
+            if (answer === 'dà') {
+                resultDiv.style.color = "green";
+                resultDiv.innerText = "✅ 答對了！是第四聲 dà";
+            } else {
+                resultDiv.style.color = "red";
+                resultDiv.innerText = "❌ 不對喔，再聽一次試試看！";
+            }
         }
-        .option-btn {
-            background-color: #f0f0f0;
-            border: 2px solid transparent;
-            padding: 12px;
-            font-size: 1.2em;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .option-btn:hover {
-            background-color: #e4e4e4;
-        }
-        .option-btn.correct {
-            background-color: #d4edda;
-            border-color: #28a745;
-            color: #155724;
-        }
-        .option-btn.wrong {
-            background-color: #f8d7da;
-            border-color: #dc3545;
-            color: #721c24;
-            animation: shake 0.4s;
-        }
-        .feedback {
-            margin-top: 20px;
-            font-weight: bold;
-            min-height: 24px;
-        }
-        .next-
+    </script>
+
+</body>
+</html>
