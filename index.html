@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luyện thanh điệu, chăm cún yêu | Mandarin Tone Practice</title>
+    <title>Mandarin Tone Practice | Paws & Tones</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
 
@@ -15,7 +15,7 @@
             --correct: #8ED081;     
             --correct-dark: #76AE6B;
             --wrong: #FF6B6B;       
-            --bg-color: #FFF9F0;    /* Vàng nhạt background */
+            --bg-color: #FFF9F0;    
             --card-bg: #FFFFFF;
             --text-main: #4A4A4A;
         }
@@ -28,42 +28,46 @@
             background-size: 40px 40px; background-position: 0 0, 20px 20px;
             color: var(--text-main);
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; overflow: hidden;
+            height: 100vh; overflow: hidden; position: relative;
         }
+
+        /* Nút TẮT/BẬT ÂM THANH (Góc trên bên phải) */
+        .mute-btn {
+            position: absolute; top: 20px; right: 20px; z-index: 1000;
+            background: white; border: 3px solid #E9ECEF; border-radius: 50%;
+            width: 50px; height: 50px; font-size: 1.5em; cursor: pointer;
+            display: none; justify-content: center; align-items: center;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1); transition: all 0.2s;
+        }
+        .mute-btn:hover { border-color: var(--secondary); transform: scale(1.05); }
+        .mute-btn.muted { opacity: 0.6; }
 
         /* KHUNG CHỨA CHUNG */
-        .app-container {
-            width: 95%; max-width: 1000px; height: 90vh; position: relative;
-        }
+        .app-container { width: 95%; max-width: 1000px; height: 90vh; position: relative; }
 
-        /* VIEW CONTAINERS (Tách biệt màn hình đơn và màn hình đôi) */
+        /* VIEW CONTAINERS */
         .view-container { display: none; width: 100%; height: 100%; }
         .view-container.active { display: flex; }
         
         #single-view { justify-content: center; align-items: center; }
         #split-view { gap: 20px; flex-direction: row; }
 
-        /* Các Panel chung */
         .panel {
             background-color: var(--card-bg); border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
             border: 3px solid #FFF0F5; display: flex; flex-direction: column;
         }
 
-        /* Chuyển cảnh */
         .screen { display: none; width: 100%; height: 100%; animation: fadeIn 0.4s ease-out; flex-direction: column; }
         .screen.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* --- MÀN HÌNH ĐƠN (Start & Settings) --- */
-        .center-panel {
-            width: 100%; max-width: 500px; padding: 40px 30px; 
-            align-items: center; justify-content: center; text-align: center;
-        }
+        .center-panel { width: 100%; max-width: 500px; padding: 40px 30px; align-items: center; justify-content: center; text-align: center; }
 
-        .game-title-vn { color: var(--primary); font-size: 2.3em; font-weight: 900; line-height: 1.2; margin-bottom: 5px; }
-        .game-title-en { color: var(--secondary); font-size: 1.5em; font-weight: 800; }
-        .game-intro { color: #888; font-size: 1.1em; font-weight: 700; margin-bottom: 25px; }
+        .game-title-en { color: var(--secondary); font-size: 2.3em; font-weight: 900; line-height: 1.2; margin-bottom: 5px; }
+        .game-title-vn { color: var(--primary); font-size: 1.3em; font-weight: 800; }
+        .game-intro { color: #888; font-size: 1.05em; font-weight: 700; margin-bottom: 25px; margin-top: 10px; }
 
         .welcome-pet {
             width: 180px; height: 180px; border-radius: 50%; border: 6px solid #FFD700; background-color: #FFF3CD;
@@ -105,16 +109,14 @@
         /* --- MÀN HÌNH ĐÔI (Game & End) --- */
         .left-wrapper { flex: 6.5; display: flex; flex-direction: column; height: 100%; }
         
-        /* Cửa sổ Chú cún (Đổi màu Hồng / Vàng) */
+        /* Cửa sổ Chú cún (Màu Hồng / Viền Vàng) */
         .right-panel { 
             flex: 3.5; padding: 25px; align-items: center; justify-content: center; text-align: center; 
-            background-color: #FFE4E1; /* Màu nền hồng tiệp với body */
-            border-color: #FFB6C1;
+            background-color: #FFE4E1; border-color: #FFB6C1;
         }
         .pet-image-container {
             width: 220px; height: 220px; background-color: #FFF3CD; border-radius: 50%; 
-            border: 6px solid #FFD700; /* Vòng tròn màu vàng */
-            overflow: hidden; display: flex; justify-content: center; align-items: center;
+            border: 6px solid #FFD700; overflow: hidden; display: flex; justify-content: center; align-items: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 20px;
         }
         .pet-image { width: 100%; height: 100%; object-fit: cover; }
@@ -127,7 +129,6 @@
 
         /* Giao diện Game (Bên Trái) */
         .game-panel { padding: 25px; height: 100%; justify-content: space-between; }
-        
         .timer-bar-bg { width: 100%; height: 8px; background: #E9ECEF; border-radius: 4px; margin-bottom: 15px; overflow: hidden; display: none; }
         .timer-bar-fill { height: 100%; background: var(--correct); width: 100%; transition: width 0.1s linear, background-color 0.3s; }
         .top-bar { display: flex; justify-content: space-between; margin-bottom: 12px; color: #A0A0A0; font-weight: 800; font-size: 1.05em;}
@@ -155,8 +156,7 @@
         .answer-reveal-wrapper.active { display: flex; animation: fadeIn 0.3s; }
         .warning-banner {
             background-color: #FFF3CD; color: #856404; text-align: center; padding: 8px;
-            border-radius: 12px 12px 0 0; font-weight: 800; font-size: 0.95em; border: 2px dashed #FFD700; border-bottom: none;
-            display: none;
+            border-radius: 12px 12px 0 0; font-weight: 800; font-size: 0.95em; border: 2px dashed #FFD700; border-bottom: none; display: none;
         }
         .answer-reveal {
             background-color: #FFF8DC; border: 2px dashed #FFD700; padding: 12px 20px; border-radius: 12px; 
@@ -167,12 +167,11 @@
         .reveal-tone-note { font-size: 0.75em; color: #B8860B; font-weight: 700; margin-top: 2px;}
         .reveal-meaning { font-size: 1.15em; color: #8B6508; font-weight: 800; }
 
-        /* Màn hình Kết thúc (Nằm bên Trái) */
+        /* Màn hình Kết thúc */
         .end-panel { padding: 30px; justify-content: center; align-items: center; text-align: center; height: 100%;}
         .leaderboard-list { text-align: left; width: 100%; margin: 20px 0; list-style: none; overflow-y: auto; max-height: 250px; padding-right: 5px;}
         .leaderboard-list li { background: #F8F9FA; padding: 12px 15px; border-radius: 12px; margin-bottom: 8px; font-weight: 800; color: #555; display: flex; justify-content: space-between; }
         .leaderboard-list li.highlight { background: #FFE4E1; color: var(--primary-dark); border: 2px solid var(--primary); }
-
         .end-buttons { display: flex; gap: 10px; flex-direction: column; width: 100%;}
         .nav-buttons { display: flex; gap: 12px; }
         .nav-buttons .btn { margin-bottom: 0; }
@@ -181,6 +180,7 @@
             body { height: auto; overflow-y: auto; padding: 15px; }
             .app-container { height: auto; min-height: 100vh; }
             #split-view { flex-direction: column; }
+            .mute-btn { top: 10px; right: 10px; width: 40px; height: 40px; font-size: 1.2em; }
         }
 
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
@@ -189,34 +189,36 @@
 </head>
 <body>
 
+<button class="mute-btn" id="mute-btn" onclick="toggleMute()">🔊</button>
+
 <div class="app-container">
 
     <div id="single-view" class="view-container active">
         
         <div class="panel center-panel screen active" id="welcome-screen">
             <div class="game-title-en">Mandarin Tone Practice</div>
-            <div class="game-title-vn">Luyện thanh điệu,<br>chăm cún yêu</div>
-            <div class="game-intro">Nghe và chọn đúng để cho cún ăn nhé!</div>
+            <div class="game-title-vn">Luyện thanh điệu, chăm cún yêu</div>
+            <div class="game-intro" id="welcome-intro">Listen and choose the correct tone to feed the puppy!</div>
             
             <img src="assets/dog_idle.gif" class="welcome-pet" alt="Cute Puppy" onerror="this.src='https://via.placeholder.com/180/FFF3CD/FFD700?text=Puppy'">
             
-            <input type="text" id="player-name" class="input-name" placeholder="Tên của bạn / Your name..." autocomplete="off">
-            <button class="btn" onclick="goToSettings()">Bắt đầu / Start</button>
+            <input type="text" id="player-name" class="input-name" placeholder="Your name / Tên của bạn..." autocomplete="off">
+            <button class="btn" onclick="goToSettings()">Start / Bắt đầu</button>
         </div>
 
         <div class="panel center-panel screen" id="settings-screen">
-            <h1 style="margin-bottom: 25px; color: var(--secondary-dark);" id="settings-title">Cài đặt trò chơi</h1>
+            <h1 style="margin-bottom: 25px; color: var(--secondary-dark);" id="settings-title">Game Settings</h1>
             
             <div class="setting-group">
-                <span class="setting-label" id="lbl-lang">1. Ngôn ngữ / Language:</span>
+                <span class="setting-label" id="lbl-lang">1. Language / Ngôn ngữ:</span>
                 <div class="toggle-container">
-                    <button class="toggle-btn active" id="lang-vn" onclick="setLang('vn')">Tiếng Việt</button>
-                    <button class="toggle-btn" id="lang-en" onclick="setLang('en')">English</button>
+                    <button class="toggle-btn" id="lang-vn" onclick="setLang('vn')">Tiếng Việt</button>
+                    <button class="toggle-btn active" id="lang-en" onclick="setLang('en')">English</button>
                 </div>
             </div>
 
             <div class="setting-group">
-                <span class="setting-label" id="lbl-level">2. Cấp độ / Level:</span>
+                <span class="setting-label" id="lbl-level">2. Level:</span>
                 <div class="toggle-container">
                     <button class="toggle-btn active" id="lv-1" onclick="setLevel(1)">Level 1</button>
                     <button class="toggle-btn" id="lv-2" onclick="setLevel(2)">Level 2</button>
@@ -224,15 +226,15 @@
             </div>
 
             <div class="setting-group">
-                <span class="setting-label" id="lbl-mode">3. Chế độ / Mode:</span>
+                <span class="setting-label" id="lbl-mode">3. Mode:</span>
                 <div class="toggle-container">
-                    <button class="toggle-btn active" id="mode-relax" onclick="setMode('relax')">Thư giãn</button>
-                    <button class="toggle-btn" id="mode-speed" onclick="setMode('speed')">5 Giây</button>
+                    <button class="toggle-btn active" id="mode-relax" onclick="setMode('relax')">Relaxed</button>
+                    <button class="toggle-btn" id="mode-speed" onclick="setMode('speed')">5 Seconds</button>
                 </div>
             </div>
 
-            <button class="btn btn-green" id="btn-play-now" style="margin-top: 15px;" onclick="startGame()">Vào chơi ngay!</button>
-            <button class="btn btn-secondary" id="btn-back" onclick="goHome()">Trang chủ</button>
+            <button class="btn btn-green" id="btn-play-now" style="margin-top: 15px;" onclick="startGame()">Play Now!</button>
+            <button class="btn btn-secondary" id="btn-back" onclick="goHome()">Back to Home</button>
         </div>
     </div>
 
@@ -250,38 +252,38 @@
                 
                 <div class="vocab-image-container"><img id="vocab-img" class="vocab-image" src="" alt="Vocabulary"></div>
                 
-                <button class="btn btn-green" id="btn-listen" style="padding: 10px;" onclick="playSound()">🔊 Nghe lại</button>
+                <button class="btn btn-green" id="btn-listen" style="padding: 10px;" onclick="playSoundTTS()">🔊 Listen again</button>
                 
                 <div class="options-grid" id="options-container"></div>
                 
                 <div class="answer-reveal-wrapper" id="answer-reveal-wrapper">
-                    <div class="warning-banner" id="warning-banner">Đã sai 2 lần! Đây là đáp án:</div>
+                    <div class="warning-banner" id="warning-banner">2 mistakes! Here is the answer:</div>
                     <div class="answer-reveal">
                         <div class="reveal-char" id="reveal-char">大</div>
                         <div class="reveal-pinyin">
                             <span id="reveal-pinyin-text">dà</span>
-                            <span class="reveal-tone-note" id="reveal-tone-note">(Thanh 4)</span>
+                            <span class="reveal-tone-note" id="reveal-tone-note">(Tone 4)</span>
                         </div>
                         <div class="reveal-meaning" id="reveal-meaning">big</div>
                     </div>
                 </div>
                 
                 <div class="nav-buttons">
-                    <button class="btn btn-secondary" id="btn-quit" onclick="goToSettings()">Bỏ cuộc</button>
-                    <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">Tiếp tục ➔</button>
+                    <button class="btn btn-secondary" id="btn-quit" onclick="goToSettings()">Quit</button>
+                    <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">Next ➔</button>
                 </div>
             </div>
 
             <div class="panel end-panel screen" id="end-screen">
-                <h1 id="end-title" style="color: var(--primary);">Hoàn thành!</h1>
-                <p class="game-intro" id="end-subtitle">Cún con rất no bụng và hạnh phúc.</p>
+                <h1 id="end-title" style="color: var(--primary);">Well Done!</h1>
+                <p class="game-intro" id="end-subtitle" style="margin-bottom: 5px;">The puppy is very full and happy.</p>
                 
                 <ul class="leaderboard-list" id="leaderboard-list"></ul>
                 
                 <div class="end-buttons">
-                    <button class="btn btn-green" id="btn-replay" onclick="replaySame()">Chơi lại (Cùng thiết lập)</button>
-                    <button class="btn btn-blue" id="btn-continue" onclick="backToSettings()">Chơi tiếp (Đổi Cài đặt)</button>
-                    <button class="btn btn-secondary" id="btn-home" onclick="goHome()">Trang chủ (Đổi tên)</button>
+                    <button class="btn btn-green" id="btn-replay" onclick="replaySame()">Play Again (Same Settings)</button>
+                    <button class="btn btn-blue" id="btn-continue" onclick="backToSettings()">Continue (Change Settings)</button>
+                    <button class="btn btn-secondary" id="btn-home" onclick="goHome()">Back to Home</button>
                 </div>
             </div>
 
@@ -291,11 +293,11 @@
             <div class="pet-image-container">
                 <img id="pet-img" class="pet-image" src="assets/dog_idle.gif" alt="Puppy NPC" onerror="this.src='https://via.placeholder.com/220/FFF3CD/FFD700?text=Pet'">
             </div>
-            <div class="pet-status" id="pet-status">Cún đang đợi bạn...</div>
+            <div class="pet-status" id="pet-status">Puppy is listening...</div>
             
             <div class="stats-box">
-                <div class="stat-line"><span id="lbl-score">Điểm số:</span> <span class="stat-val score" id="score-display">0</span></div>
-                <div class="stat-line"><span id="lbl-streak">Chuỗi đúng:</span> <span class="stat-val fire" id="streak-display">0</span></div>
+                <div class="stat-line"><span id="lbl-score">Score:</span> <span class="stat-val score" id="score-display">0</span></div>
+                <div class="stat-line"><span id="lbl-streak">Combo:</span> <span class="stat-val fire" id="streak-display">0</span></div>
             </div>
         </div>
 
@@ -303,27 +305,95 @@
 </div>
 
 <script>
-    // --- 1. TỪ ĐIỂN ĐA NGÔN NGỮ (i18n) ---
+    // --- 0. HỆ THỐNG ÂM THANH (AUDIO SYSTEM) ---
+    let isMuted = false;
+    const dogBarkAudio = new Audio('assets/dog_bark.wav');
+    
+    // Tự động khởi tạo Audio Context cho Web Audio API
+    const AudioContext = window.AudioContext || window.webkitAudioContext;
+    const audioCtx = new AudioContext();
+
+    function toggleMute() {
+        isMuted = !isMuted;
+        const muteBtn = document.getElementById('mute-btn');
+        muteBtn.innerText = isMuted ? "🔇" : "🔊";
+        muteBtn.classList.toggle('muted', isMuted);
+        if(isMuted) window.speechSynthesis.cancel();
+    }
+
+    function playDogBark() {
+        if (!isMuted) {
+            dogBarkAudio.currentTime = 0;
+            dogBarkAudio.play().catch(e => console.log("Audio play blocked by browser."));
+        }
+    }
+
+    // Tiếng "Ting" (Đúng) và "Bụp" (Sai)
+    function playSFX(isCorrect) {
+        if (isMuted) return;
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        
+        const osc = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        osc.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        
+        if (isCorrect) {
+            // Tiếng "Ting" trong trẻo
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(880, audioCtx.currentTime); 
+            osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1); 
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+        } else {
+            // Tiếng "Bụp" trầm buồn
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(250, audioCtx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
+            gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+    }
+
+    function playSoundTTS() {
+        window.speechSynthesis.cancel(); // Xóa giọng cũ
+        if (isMuted) return;
+        setTimeout(() => {
+            const q = currentQuestions[currentIndex];
+            let utterance = new SpeechSynthesisUtterance(q.ch);
+            utterance.lang = "zh-TW";
+            utterance.rate = 0.85; 
+            window.speechSynthesis.speak(utterance);
+        }, 150);
+    }
+
+    // --- 1. TỪ ĐIỂN ĐA NGÔN NGỮ (i18n) - ENGLISH DEFAULT ---
     const i18n = {
-        vn: {
-            settingsTitle: "Cài đặt trò chơi", lblLang: "1. Ngôn ngữ / Language:", lblLevel: "2. Cấp độ / Level:", lblMode: "3. Chế độ / Mode:",
-            btnRelax: "Thư giãn", btnSpeed: "5 Giây", btnPlay: "Vào chơi ngay!", btnBack: "Trang chủ",
-            btnListen: "🔊 Nghe lại", btnQuit: "Bỏ cuộc", btnNext: "Tiếp tục ➔", 
-            btnReplay: "Chơi lại (Cùng thiết lập)", btnContinue: "Chơi tiếp (Đổi cài đặt)", btnHome: "Về Trang chủ",
-            petIdle: "Cún đang nghe...", petHappy: "Đúng rồi! Ngon quá!", petSad: "Sai rồi... cún đói...", petCry: "Huhu khó quá!", petEnd: "Tuyệt vời! Cún no rồi!",
-            lblScore: "Điểm số:", lblStreak: "Chuỗi đúng:",
-            warnFail: "Đã sai 2 lần! Đây là đáp án đúng 👀", warnTime: "Hết giờ! Đây là đáp án đúng ⏱️",
-            endTitle: "Hoàn thành!", endSub: "Cún con rất no bụng và hạnh phúc."
-        },
         en: {
-            settingsTitle: "Game Settings", lblLang: "1. Language:", lblLevel: "2. Level:", lblMode: "3. Mode:",
-            btnRelax: "Relaxed", btnSpeed: "5 Seconds", btnPlay: "Play Now!", btnBack: "Home",
+            welcomeIntro: "Listen and choose the correct tone to feed the puppy!",
+            settingsTitle: "Game Settings", lblLang: "1. Language / Ngôn ngữ:", lblLevel: "2. Level:", lblMode: "3. Mode:",
+            btnRelax: "Relaxed", btnSpeed: "5 Seconds", btnPlay: "Play Now!", btnBack: "Back to Home",
             btnListen: "🔊 Listen again", btnQuit: "Quit", btnNext: "Next ➔", 
             btnReplay: "Play Again (Same Settings)", btnContinue: "Continue (Change Settings)", btnHome: "Back to Home",
             petIdle: "Puppy is listening...", petHappy: "Yummy! Puppy is happy!", petSad: "Wrong... puppy is hungry...", petCry: "So hard! Puppy is crying!", petEnd: "Awesome! Puppy is full!",
             lblScore: "Score:", lblStreak: "Combo:",
             warnFail: "2 mistakes! Here is the answer 👀", warnTime: "Time's up! Here is the answer ⏱️",
             endTitle: "Well Done!", endSub: "The puppy is very full and happy."
+        },
+        vn: {
+            welcomeIntro: "Nghe và chọn đúng thanh điệu để cho cún ăn nhé!",
+            settingsTitle: "Cài đặt trò chơi", lblLang: "1. Ngôn ngữ / Language:", lblLevel: "2. Cấp độ / Level:", lblMode: "3. Chế độ / Mode:",
+            btnRelax: "Thư giãn", btnSpeed: "5 Giây", btnPlay: "Vào chơi ngay!", btnBack: "Về Trang chủ",
+            btnListen: "🔊 Nghe lại", btnQuit: "Bỏ cuộc", btnNext: "Tiếp tục ➔", 
+            btnReplay: "Chơi lại (Cùng thiết lập)", btnContinue: "Chơi tiếp (Đổi cài đặt)", btnHome: "Về Trang chủ",
+            petIdle: "Cún đang nghe...", petHappy: "Đúng rồi! Ngon quá!", petSad: "Sai rồi... cún đói...", petCry: "Huhu khó quá!", petEnd: "Tuyệt vời! Cún no rồi!",
+            lblScore: "Điểm số:", lblStreak: "Chuỗi đúng:",
+            warnFail: "Đã sai 2 lần! Đây là đáp án đúng 👀", warnTime: "Hết giờ! Đây là đáp án đúng ⏱️",
+            endTitle: "Hoàn thành!", endSub: "Cún con rất no bụng và hạnh phúc."
         }
     };
 
@@ -352,13 +422,14 @@
         { ch: "難聽", meaningVN: "khó nghe", meaningEN: "awful", pinyin: "nán tīng", tones: ["nān tīng", "nán tīng", "nǎn tīng", "nàn tīng"], correct: 1, noteVN: "Thanh 2 + Thanh 1", noteEN: "Tone 2 + Tone 1", imgFile: "nanting.jpg" },
         { ch: "突然", meaningVN: "đột nhiên", meaningEN: "sudden", pinyin: "tú rán", tones: ["tū rán", "tú rán", "tǔ rán", "tù rán"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "turan.jpg" },
         { ch: "無聊", meaningVN: "nhàm chán", meaningEN: "boring", pinyin: "wú liáo", tones: ["wū liáo", "wú liáo", "wǔ liáo", "wù liáo"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "wuliao.jpg" },
-        { ch: "危險", meaningVN: "nguy hiểm", meaningEN: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 0, noteVN: "Thanh 1 + Thanh 3", noteEN: "Tone 1 + Tone 3", imgFile: "weixian.jpg" },
+        // Cập nhật chuẩn Đài Loan: wéi xiǎn
+        { ch: "危險", meaningVN: "nguy hiểm", meaningEN: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 1, noteVN: "Thanh 2 + Thanh 3", noteEN: "Tone 2 + Tone 3", imgFile: "weixian.jpg" },
         { ch: "糟糕", meaningVN: "tồi tệ", meaningEN: "terrible", pinyin: "zāo gāo", tones: ["zāo gāo", "záo gāo", "zǎo gāo", "zào gāo"], correct: 0, noteVN: "Thanh 1 + Thanh 1", noteEN: "Tone 1 + Tone 1", imgFile: "zaogao.jpg" }
     ];
 
     // --- 3. BIẾN TRẠNG THÁI ---
     let playerName = "Guest";
-    let currentLang = 'vn';
+    let currentLang = 'en'; // Mặc định là Tiếng Anh
     let selectedLevel = 1;
     let isSpeedMode = false;
     
@@ -370,27 +441,28 @@
     let isLocked = false;
     let timerInterval;
 
-    // --- 4. HÀM ĐIỀU KHIỂN LUỒNG (USER FLOW) ---
+    // --- 4. HÀM ĐIỀU KHIỂN LUỒNG ---
     function showView(viewId, screenId) {
-        // Tắt tất cả
         document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         
-        // Mở cái cần thiết
         document.getElementById(viewId).classList.add('active');
         document.getElementById(screenId).classList.add('active');
     }
 
     function goHome() {
-        document.getElementById('player-name').value = ""; // Xóa tên cũ
+        document.getElementById('player-name').value = ""; 
+        document.getElementById('mute-btn').style.display = "none"; // Ẩn nút mute ở trang chủ
         showView('single-view', 'welcome-screen');
     }
 
     function goToSettings() {
         const nameInput = document.getElementById('player-name').value.trim();
         if(nameInput !== "") playerName = nameInput;
+        
+        document.getElementById('mute-btn').style.display = "flex"; // Hiện nút mute
         showView('single-view', 'settings-screen');
-        applyLanguage(currentLang);
+        applyLanguage(currentLang); // Áp dụng ngôn ngữ mặc định (EN)
     }
     
     function backToSettings() {
@@ -398,7 +470,6 @@
         updatePetState('idle');
     }
 
-    // Setters
     function setLang(lang) {
         currentLang = lang;
         document.getElementById('lang-vn').classList.toggle('active', lang === 'vn');
@@ -418,6 +489,7 @@
 
     function applyLanguage(lang) {
         const t = i18n[lang];
+        document.getElementById('welcome-intro').innerText = t.welcomeIntro;
         document.getElementById('settings-title').innerText = t.settingsTitle;
         document.getElementById('lbl-lang').innerText = t.lblLang;
         document.getElementById('lbl-level').innerText = t.lblLevel;
@@ -442,6 +514,8 @@
     // Khởi động Game
     function startGame() {
         showView('split-view', 'game-screen');
+        playDogBark(); // Âm thanh chó sủa chào sân
+
         currentQuestions = selectedLevel === 1 ? [...level1Data] : [...level2Data];
         currentQuestions.sort(() => Math.random() - 0.5); 
         
@@ -453,7 +527,7 @@
     }
     
     function replaySame() {
-        startGame(); // Gọi lại startGame với settings hiện tại
+        startGame();
     }
 
     function loadQuestion() {
@@ -483,12 +557,10 @@
             optionsContainer.appendChild(btn);
         });
 
-        // Tự động phát âm thanh khi mở câu hỏi
-        playSound();
+        playSoundTTS();
 
-        // Khởi động Timer
         if (isSpeedMode) {
-            let timeLeft = 50; // 5.0 seconds
+            let timeLeft = 50; 
             const fill = document.getElementById('timer-fill');
             fill.style.width = '100%'; fill.style.backgroundColor = 'var(--correct)';
             
@@ -508,6 +580,7 @@
     function handleTimeOut(q, t) {
         if (isLocked) return;
         isLocked = true; streak = 0;
+        playSFX(false); // Phát âm báo sai
         updatePetState('cry');
         
         const buttons = document.querySelectorAll('.option-btn');
@@ -516,18 +589,6 @@
             else btn.classList.add('glowing');
         });
         showAnswerReveal(q, true, t.warnTime);
-    }
-
-    // ÉP PHÁT ÂM THANH
-    function playSound() {
-        window.speechSynthesis.cancel(); 
-        setTimeout(() => {
-            const q = currentQuestions[currentIndex];
-            let utterance = new SpeechSynthesisUtterance(q.ch);
-            utterance.lang = "zh-TW";
-            utterance.rate = 0.85; 
-            window.speechSynthesis.speak(utterance);
-        }, 150);
     }
 
     function updatePetState(state) {
@@ -556,11 +617,13 @@
             btnElement.classList.add('correct');
             streak++; score += (100 + streak * 10);
             isLocked = true;
+            playSFX(true); // Phát tiếng Ting
             updatePetState('happy');
             showAnswerReveal(q, false, "");
         } else {
             wrongAttempts++; streak = 0;
             btnElement.classList.add('wrong');
+            playSFX(false); // Phát tiếng Bụp
             setTimeout(() => { btnElement.classList.remove('wrong'); }, 400); 
             btnElement.disabled = true;
 
@@ -596,7 +659,7 @@
         document.getElementById('answer-reveal-wrapper').classList.add('active');
         document.getElementById('next-btn').style.display = "block";
         
-        playSound(); // Tự động phát âm lại
+        playSoundTTS(); // Phát lại từ vựng
     }
 
     function nextQuestion() {
@@ -607,6 +670,7 @@
 
     function endGame() {
         showView('split-view', 'end-screen');
+        playDogBark(); // Chó sủa ăn mừng cuối game
         updatePetState('happy');
         document.getElementById('pet-status').innerText = i18n[currentLang].petEnd;
         saveLeaderboard();
@@ -629,6 +693,9 @@
             listEl.appendChild(li);
         });
     }
+
+    // Thiết lập mặc định khi vừa mở web
+    applyLanguage('en'); 
 </script>
 
 </body>
