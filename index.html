@@ -3,195 +3,132 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語聲調大挑戰 - 終極版</title>
+    <title>華語聲調大挑戰 - Puppy Edition</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+
         :root {
-            --primary-color: #4A90E2;
-            --secondary-color: #FFB347;
-            --danger-color: #e74c3c;
-            --correct-color: #28a745;
-            --wrong-color: #dc3545;
-            --bg-color: #F5F7FA;
+            --primary: #FF8F9C;     /* Hồng pastel đậm */
+            --primary-dark: #E07884;
+            --secondary: #6CB4EE;   /* Xanh dương pastel */
+            --secondary-dark: #5A99C9;
+            --correct: #8ED081;     /* Xanh lá pastel */
+            --correct-dark: #76AE6B;
+            --wrong: #FF6B6B;       /* Đỏ pastel */
+            --bg-color: #FFF9F0;    /* Vàng kem nền */
             --card-bg: #FFFFFF;
+            --text-main: #4A4A4A;
         }
+        
+        * { box-sizing: border-box; font-family: 'Nunito', sans-serif; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg-color);
-            color: #333;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px 0;
+            background-image: radial-gradient(#FFE4E1 15%, transparent 16%), radial-gradient(#FFE4E1 15%, transparent 16%);
+            background-size: 40px 40px;
+            background-position: 0 0, 20px 20px;
+            color: var(--text-main);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; margin: 0; padding: 20px;
         }
-        .container {
+
+        /* Bố cục Game chính */
+        .game-wrapper {
+            display: flex; gap: 20px; max-width: 900px; width: 100%; flex-direction: row;
+        }
+        @media (max-width: 768px) {
+            .game-wrapper { flex-direction: column; }
+        }
+
+        /* Các khối Panel (Thẻ Card) */
+        .panel {
             background-color: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 90%;
-            max-width: 450px;
-            padding: 30px;
-            text-align: center;
-            position: relative;
+            border-radius: 24px;
+            box-shadow: 0 8px 0 rgba(0,0,0,0.05), 0 15px 30px rgba(0,0,0,0.05);
+            padding: 30px; flex: 1; text-align: center;
+            border: 3px solid #FFF0F5;
         }
-        
-        /* 姓名輸入與首頁選單 */
-        .screen { display: none; }
-        #login-screen.active, #home-screen.active, #game-screen.active, #end-screen.active { display: block; }
-        
-        h1 { color: var(--primary-color); margin-bottom: 10px; }
-        p.subtitle { color: #666; margin-bottom: 25px; }
-        
-        input[type="text"] {
-            width: 80%;
-            padding: 12px;
-            font-size: 1.2em;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        input[type="text"]:focus { outline: none; border-color: var(--primary-color); }
 
+        /* Chuyển cảnh mượt mà */
+        .screen { display: none; animation: fadeIn 0.4s ease-out; }
+        .screen.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Tiêu đề Game */
+        h1 { color: var(--primary); margin-bottom: 5px; font-size: 2.2em; font-weight: 800; }
+        p.subtitle { color: #888; margin-bottom: 25px; font-size: 1.1em; font-weight: 700;}
+
+        /* Nút bấm Game 3D */
         .btn {
-            background-color: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 15px 20px;
-            border-radius: 8px;
-            font-size: 1.2em;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 15px;
-            transition: transform 0.1s, filter 0.2s;
+            background-color: var(--primary); color: white; border: none;
+            padding: 16px 20px; border-radius: 16px; font-size: 1.2em; font-weight: 800;
+            cursor: pointer; width: 100%; margin-bottom: 15px;
+            box-shadow: 0 6px 0 var(--primary-dark); transition: all 0.1s;
         }
-        .btn:hover { filter: brightness(0.9); transform: scale(1.02); }
-        .btn.level2 { background-color: var(--secondary-color); color: #333; font-weight: bold; }
-        .btn-secondary { background-color: #6c757d; }
-        
-        /* 難易度選擇 */
-        .difficulty-selector {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 25px;
-        }
-        .diff-btn {
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            cursor: pointer;
-            font-size: 1em;
-            flex: 1;
-        }
-        .diff-btn.active { border-color: var(--primary-color); background-color: #eef5fc; font-weight: bold; }
+        .btn:hover { filter: brightness(1.05); }
+        .btn:active { transform: translateY(6px); box-shadow: 0 0 0 var(--primary-dark); }
+        .btn.level2 { background-color: var(--secondary); box-shadow: 0 6px 0 var(--secondary-dark); }
+        .btn.level2:active { box-shadow: 0 0 0 var(--secondary-dark); }
+        .btn-secondary { background-color: #D3D3D3; box-shadow: 0 6px 0 #B0B0B0; color: #555;}
+        .btn-secondary:active { box-shadow: 0 0 0 #B0B0B0; }
 
-        /* 遊戲畫面樣式 */
-        .stats-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 1.1em;
-            font-weight: bold;
-        }
-        .score-display { color: var(--primary-color); }
-        .streak-display { color: #ff6b6b; opacity: 0; transition: opacity 0.3s; }
-        .streak-display.active { opacity: 1; animation: pop 0.3s ease-out; }
-        
-        .timer-bar {
-            background-color: #eee;
-            height: 8px;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            overflow: hidden;
-            display: none; /* 預設隱藏，挑戰模式才顯示 */
-        }
-        .timer-fill {
-            height: 100%;
-            background-color: var(--correct-color);
-            width: 100%;
-            transition: width 1s linear, background-color 0.3s;
-        }
-
-        .header-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            font-size: 0.9em;
-            color: #666;
-        }
-        .level-badge { background-color: #eee; padding: 4px 12px; border-radius: 20px; }
-        
-        .visual-container {
-            width: 100%;
-            height: 180px;
-            background-color: #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 16px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border: 2px solid #dee2e6;
+        /* Khung hiển thị Ảnh từ vựng */
+        .vocab-image-container {
+            width: 100%; height: 220px; background-color: #F8F9FA;
+            border-radius: 16px; margin-bottom: 20px; border: 4px solid #F1F3F5;
+            display: flex; justify-content: center; align-items: center; overflow: hidden;
             position: relative;
         }
-        .emoji-display { font-size: 80px; user-select: none; }
-        
-        .floating-points {
-            position: absolute;
-            color: var(--secondary-color);
-            font-weight: bold;
-            font-size: 1.5em;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            animation: floatUp 1s ease-out forwards;
-            pointer-events: none;
-        }
+        .vocab-image { width: 100%; height: 100%; object-fit: cover; display: none; }
+        .placeholder-text { color: #adb5bd; font-weight: 700; }
 
-        .play-btn {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-size: 1.2em;
-            cursor: pointer;
-            width: 100%;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 0 #388E3C;
-        }
-        .play-btn:active { transform: translateY(4px); box-shadow: none; }
-        
-        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        /* Lưới lựa chọn Pinyin */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
         .option-btn {
-            background-color: #f8f9fa; border: 2px solid #dee2e6; padding: 15px 5px;
-            font-size: 1.2em; border-radius: 8px; cursor: pointer; transition: all 0.2s;
+            background-color: white; border: 3px solid #E9ECEF; padding: 15px 5px;
+            font-size: 1.3em; font-weight: 700; border-radius: 16px; cursor: pointer; 
+            color: var(--text-main); transition: all 0.1s; box-shadow: 0 4px 0 #E9ECEF;
         }
-        .option-btn:hover { background-color: #e2e6ea; }
-        .option-btn.correct { background-color: #d4edda; border-color: var(--correct-color); color: #155724; }
-        .option-btn.wrong { background-color: #f8d7da; border-color: var(--wrong-color); color: #721c24; animation: shake 0.4s; }
+        .option-btn:hover:not(:disabled) { border-color: var(--secondary); color: var(--secondary); }
+        .option-btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 #E9ECEF; }
+        .option-btn:disabled { cursor: not-allowed; opacity: 0.5; box-shadow: none; transform: translateY(4px); }
         
+        .option-btn.correct { background-color: var(--correct); border-color: var(--correct-dark); color: white; box-shadow: 0 4px 0 var(--correct-dark); opacity: 1;}
+        .option-btn.wrong { background-color: var(--wrong); border-color: #D9534F; color: white; box-shadow: 0 4px 0 #D9534F; animation: shake 0.4s; }
+
+        /* Đáp án dàn hàng ngang */
         .answer-reveal {
-            display: none; background-color: #fff3cd; border: 1px solid #ffeeba;
-            padding: 15px; border-radius: 8px; margin-bottom: 15px;
+            display: none; background-color: #FFF3CD; border: 3px dashed #FFD700;
+            padding: 15px 20px; border-radius: 16px; margin-bottom: 20px;
+            align-items: center; justify-content: space-between; text-align: left;
         }
-        .answer-reveal h3 { margin: 0 0 5px 0; font-size: 1.8em; color: #856404; }
-        .answer-reveal p { margin: 0; color: #856404; }
-        
-        /* 結算與排行榜 */
-        .rank-display { font-size: 4em; margin: 10px 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.2); }
-        .rank-S { color: #FFD700; } .rank-A { color: #C0C0C0; } .rank-B { color: #CD7F32; } .rank-C { color: #4A90E2; }
-        
-        .leaderboard {
-            background: #f8f9fa; border-radius: 8px; padding: 15px;
-            margin: 20px 0; text-align: left;
+        .answer-reveal.active { display: flex; animation: fadeIn 0.3s; }
+        .reveal-char { font-size: 3.5em; color: #D4A017; margin: 0; line-height: 1; font-family: 'Kaiti', 'STKaiti', 'BiauKai', serif; }
+        .reveal-pinyin { font-size: 1.3em; color: #D4A017; font-weight: 800; text-align: center; }
+        .reveal-tone-note { font-size: 0.8em; color: #B8860B; display: block; font-weight: 700; }
+        .reveal-meaning { font-size: 1.2em; color: #8B6508; font-weight: 700; text-align: right; }
+
+        .nav-buttons { display: flex; gap: 15px; }
+        .nav-buttons .btn { margin-bottom: 0; }
+
+        /* --- CỬA SỔ CHÚ CÚN (PET PANEL) --- */
+        .pet-panel {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
-        .leaderboard h3 { margin-top: 0; color: var(--primary-color); text-align: center;}
-        .leaderboard ol { padding-left: 20px; margin-bottom: 0; }
-        .leaderboard li { margin-bottom: 5px; font-weight: bold; color: #555; }
-        .highlight-me { color: var(--danger-color) !important; }
+        .pet-image-container {
+            width: 240px; height: 240px; background-color: white;
+            border-radius: 50%; border: 6px solid #FFE4E1; overflow: hidden;
+            display: flex; justify-content: center; align-items: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .pet-image { width: 100%; height: 100%; object-fit: cover; }
+        
+        .pet-status { margin-top: 20px; font-weight: 800; color: var(--primary); font-size: 1.3em; min-height: 1.2em;}
+        .streak-counter { color: #FFA07A; font-size: 1.4em; font-weight: 800; margin-top: 5px;}
+
+        /* Top Bar */
+        .top-bar { display: flex; justify-content: space-between; margin-bottom: 15px; color: #A0A0A0; font-weight: 800; font-size: 1.1em;}
+        .level-badge { background-color: #F1F3F5; padding: 6px 15px; border-radius: 20px; color: var(--secondary-dark); }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -199,173 +136,143 @@
             50% { transform: translateX(5px); }
             75% { transform: translateX(-5px); }
         }
-        @keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-        @keyframes floatUp { 0% { opacity: 1; transform: translateY(0) scale(1); } 100% { opacity: 0; transform: translateY(-30px) scale(1.5); } }
     </style>
 </head>
 <body>
 
-<div class="container screen active" id="login-screen">
-    <h1>華語聲調大挑戰</h1>
-    <p class="subtitle">準備好挑戰你的聲調絕對音感了嗎？</p>
-    <input type="text" id="player-name" placeholder="請輸入你的名字 / Enter your name" autocomplete="off">
-    <button class="btn" onclick="login()">開始進入 / Start</button>
+<div class="game-wrapper screen active" id="home-screen">
+    <div class="panel" style="max-width: 500px; margin: 0 auto; padding: 50px 30px;">
+        <div style="font-size: 4em; margin-bottom: 10px;">🐶</div>
+        <h1>華語聲調大挑戰</h1>
+        <p class="subtitle">Hãy nghe và chọn đúng để nuôi cún nhé!</p>
+        <button class="btn" onclick="startGame(1)">Level 1: 單音節</button>
+        <button class="btn level2" onclick="startGame(2)">Level 2: 雙音節與變調</button>
+    </div>
 </div>
 
-<div class="container screen" id="home-screen">
-    <h1 id="welcome-msg">歡迎！</h1>
-    <p class="subtitle">請選擇難易度與關卡：</p>
-    
-    <div class="difficulty-selector">
-        <button class="diff-btn active" id="diff-easy" onclick="setDifficulty('easy')">🌟 輕鬆模式<br><small>(無計時)</small></button>
-        <button class="diff-btn" id="diff-hard" onclick="setDifficulty('hard')">🔥 挑戰模式<br><small>(10秒限制)</small></button>
+<div class="game-wrapper screen" id="game-screen">
+    <div class="panel">
+        <div class="top-bar">
+            <span class="level-badge" id="level-display">Level 1</span>
+            <span id="progress-text">1 / 10</span>
+        </div>
+        
+        <div class="vocab-image-container">
+            <img id="vocab-img" class="vocab-image" src="" alt="Vocabulary" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+            <span class="placeholder-text" style="display:none;">[Hình ảnh: <span id="img-filename"></span>]</span>
+        </div>
+        
+        <button class="btn" style="background-color: var(--correct); box-shadow: 0 6px 0 var(--correct-dark);" onclick="playSound()">🔊 聽發音 / Nghe lại</button>
+        
+        <div class="options-grid" id="options-container"></div>
+        
+        <div class="answer-reveal" id="answer-reveal">
+            <div class="reveal-char" id="reveal-char">大</div>
+            <div class="reveal-pinyin">
+                <span id="reveal-pinyin-text">dà</span>
+                <span class="reveal-tone-note" id="reveal-tone-note">(Tone 4)</span>
+            </div>
+            <div class="reveal-meaning" id="reveal-meaning">big</div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="btn btn-secondary" onclick="location.reload()">Bỏ cuộc</button>
+            <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">下一題 ➔</button>
+        </div>
     </div>
 
-    <button class="btn" onclick="startGame(1)">Level 1: 單音節形容詞</button>
-    <button class="btn level2" onclick="startGame(2)">Level 2: 雙音節與變調</button>
+    <div class="panel pet-panel">
+        <div class="pet-image-container">
+            <img id="pet-img" class="pet-image" src="assets/dog_idle.gif" alt="Puppy" onerror="this.src='https://via.placeholder.com/250/FFE4E1/FF8F9C?text=Pet+GIF+Missing'">
+        </div>
+        <div class="pet-status" id="pet-status">Cún đang đợi bạn...</div>
+        <div class="streak-counter" id="streak-counter">🔥 Liên kích: 0</div>
+    </div>
 </div>
 
-<div class="container screen" id="game-screen">
-    <div class="stats-bar">
-        <span class="score-display">分數: <span id="score">0</span></span>
-        <span class="streak-display" id="streak-indicator">🔥 2 連擊!</span>
+<div class="game-wrapper screen" id="end-screen">
+    <div class="panel" style="max-width: 500px; margin: 0 auto; padding: 50px 30px;">
+        <div style="font-size: 4em; margin-bottom: 10px;">🏆</div>
+        <h1>Hoàn thành xuất sắc!</h1>
+        <p class="subtitle">Cún con rất no bụng và hạnh phúc.</p>
+        <button class="btn" onclick="location.reload()">Chơi lại từ đầu ↺</button>
     </div>
-    
-    <div class="timer-bar" id="timer-bar-container"><div class="timer-fill" id="timer-fill"></div></div>
-
-    <div class="header-info">
-        <span class="level-badge" id="level-display">Level 1</span>
-        <span id="progress-text">1 / 10</span>
-    </div>
-    
-    <div class="visual-container" id="visual-box">
-        <div id="emoji-display" class="emoji-display">🐘</div>
-    </div>
-    
-    <button class="play-btn" onclick="playSound()">🔊 聽發音 / Play</button>
-    
-    <div class="options-grid" id="options-container"></div>
-    
-    <div class="answer-reveal" id="answer-reveal">
-        <h3 id="reveal-char">大</h3>
-        <p id="reveal-meaning">big (第四聲)</p>
-    </div>
-    
-    <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">下一題 ➔</button>
-    <button class="btn btn-secondary" onclick="showScreen('home-screen')">放棄並回首頁</button>
-</div>
-
-<div class="container screen" id="end-screen">
-    <h2>遊戲結算</h2>
-    <div id="rank-result"></div>
-    
-    <div class="leaderboard">
-        <h3>🏆 本機英雄榜 (Top 5)</h3>
-        <ol id="leaderboard-list"></ol>
-    </div>
-    
-    <button class="btn" onclick="showScreen('home-screen')">再次挑戰 ↺</button>
 </div>
 
 <script>
-    // 題庫資料
+    // 📚 TỪ ĐIỂN DỮ LIỆU (Đã thêm 5 từ vựng mới của bạn)
     const level1Data = [
-        { ch: "大", meaning: "big (第四聲 dà)", tones: ["dā", "dá", "dǎ", "dà"], correctIndex: 3, emoji: "🐘" },
-        { ch: "小", meaning: "small (第三聲 xiǎo)", tones: ["xiāo", "xiáo", "xiǎo", "xiào"], correctIndex: 2, emoji: "🐭" },
-        { ch: "好", meaning: "good (第三聲 hǎo)", tones: ["hāo", "háo", "hǎo", "hào"], correctIndex: 2, emoji: "👍" },
-        { ch: "新", meaning: "new (第一聲 xīn)", tones: ["xīn", "xín", "xǐn", "xìn"], correctIndex: 0, emoji: "✨" },
-        { ch: "忙", meaning: "busy (第二聲 máng)", tones: ["māng", "máng", "mǎng", "màng"], correctIndex: 1, emoji: "💦" },
-        { ch: "紅", meaning: "red (第二聲 hóng)", tones: ["hōng", "hóng", "hǒng", "hòng"], correctIndex: 1, emoji: "🍎" },
-        { ch: "黑", meaning: "black (第一聲 hēi)", tones: ["hēi", "héi", "hěi", "hèi"], correctIndex: 0, emoji: "🐈‍⬛" },
-        { ch: "冷", meaning: "cold (第三聲 lěng)", tones: ["lēng", "léng", "lěng", "lèng"], correctIndex: 2, emoji: "❄️" },
-        { ch: "熱", meaning: "hot (第四聲 rè)", tones: ["rē", "ré", "rě", "rè"], correctIndex: 3, emoji: "☀️" },
-        { ch: "酸", meaning: "sour (第一聲 suān)", tones: ["suān", "suán", "suǎn", "suàn"], correctIndex: 0, emoji: "🍋" },
-        { ch: "貴", meaning: "expensive (第四聲 guì)", tones: ["guī", "guí", "guǐ", "guì"], correctIndex: 3, emoji: "💰" }
+        { ch: "大", meaning: "big", pinyin: "dà", tones: ["dā", "dá", "dǎ", "dà"], correct: 3, toneNote: "Tone 4", imgFile: "da.jpg" },
+        { ch: "小", meaning: "small", pinyin: "xiǎo", tones: ["xiāo", "xiáo", "xiǎo", "xiào"], correct: 2, toneNote: "Tone 3", imgFile: "xiao.jpg" },
+        { ch: "好", meaning: "good", pinyin: "hǎo", tones: ["hāo", "háo", "hǎo", "hào"], correct: 2, toneNote: "Tone 3", imgFile: "hao.jpg" },
+        { ch: "新", meaning: "new", pinyin: "xīn", tones: ["xīn", "xín", "xǐn", "xìn"], correct: 0, toneNote: "Tone 1", imgFile: "xin.jpg" },
+        { ch: "忙", meaning: "busy", pinyin: "máng", tones: ["māng", "máng", "mǎng", "màng"], correct: 1, toneNote: "Tone 2", imgFile: "mang.jpg" },
+        { ch: "紅", meaning: "red", pinyin: "hóng", tones: ["hōng", "hóng", "hǒng", "hòng"], correct: 1, toneNote: "Tone 2", imgFile: "hong.jpg" },
+        { ch: "黑", meaning: "black", pinyin: "hēi", tones: ["hēi", "héi", "hěi", "hèi"], correct: 0, toneNote: "Tone 1", imgFile: "hei.jpg" },
+        { ch: "冷", meaning: "cold", pinyin: "lěng", tones: ["lēng", "léng", "lěng", "lèng"], correct: 2, toneNote: "Tone 3", imgFile: "leng.jpg" },
+        { ch: "熱", meaning: "hot", pinyin: "rè", tones: ["rē", "ré", "rě", "rè"], correct: 3, toneNote: "Tone 4", imgFile: "re.jpg" },
+        { ch: "酸", meaning: "sour", pinyin: "suān", tones: ["suān", "suán", "suǎn", "suàn"], correct: 0, toneNote: "Tone 1", imgFile: "suan.jpg" },
+        { ch: "貴", meaning: "expensive", pinyin: "guì", tones: ["guī", "guí", "guǐ", "guì"], correct: 3, toneNote: "Tone 4", imgFile: "gui.jpg" }
     ];
 
     const level2Data = [
-        { ch: "高興", meaning: "happy (gāo xìng)", tones: ["gāo xīng", "gāo xíng", "gāo xǐng", "gāo xìng"], correctIndex: 3, emoji: "😄" },
-        { ch: "便宜", meaning: "cheap (pián yí)", tones: ["piān yí", "pián yí", "piǎn yí", "piàn yí"], correctIndex: 1, emoji: "🏷️" },
-        { ch: "很好", meaning: "very good (hén hǎo)", tones: ["hěn hǎo", "hén hǎo", "hèn hǎo", "hēn hǎo"], correctIndex: 1, emoji: "🌟" },
-        { ch: "不錯", meaning: "not bad (bú cuò)", tones: ["bù cuò", "bú cuò", "bǔ cuò", "bū cuò"], correctIndex: 1, emoji: "👌" },
-        { ch: "好看", meaning: "good-looking (hǎo kàn)", tones: ["hāo kàn", "háo kàn", "hǎo kàn", "hào kàn"], correctIndex: 2, emoji: "👗" },
-        { ch: "漂亮", meaning: "pretty (piào liàng)", tones: ["piāo liàng", "piáo liàng", "piǎo liàng", "piào liàng"], correctIndex: 3, emoji: "✨" }
+        { ch: "高興", meaning: "happy", pinyin: "gāo xìng", tones: ["gāo xīng", "gāo xíng", "gāo xǐng", "gāo xìng"], correct: 3, toneNote: "Tone 1 + 4", imgFile: "gaoxing.jpg" },
+        { ch: "便宜", meaning: "cheap", pinyin: "pián yí", tones: ["piān yí", "pián yí", "piǎn yí", "piàn yí"], correct: 1, toneNote: "Tone 2 + 2", imgFile: "pianyi.jpg" },
+        { ch: "很好", meaning: "very good", pinyin: "hěn hǎo", tones: ["hěn hǎo", "hén hǎo", "hèn hǎo", "hēn hǎo"], correct: 0, toneNote: "Tone 3 + 3 -> Sandhi", imgFile: "henhao.jpg" },
+        { ch: "不錯", meaning: "not bad", pinyin: "bú cuò", tones: ["bù cuò", "bú cuò", "bǔ cuò", "bū cuò"], correct: 1, toneNote: "Tone 4 -> Sandhi + 4", imgFile: "bucuo.jpg" },
+        { ch: "好看", meaning: "good-looking", pinyin: "hǎo kàn", tones: ["hāo kàn", "háo kàn", "hǎo kàn", "hào kàn"], correct: 2, toneNote: "Tone 3 + 4", imgFile: "haokan.jpg" },
+        { ch: "漂亮", meaning: "pretty", pinyin: "piào liàng", tones: ["piāo liàng", "piáo liàng", "piǎo liàng", "piào liàng"], correct: 3, toneNote: "Tone 4 + 4", imgFile: "piaoliang.jpg" },
+        // 5 TỪ MỚI THÊM VÀO
+        { ch: "難聽", meaning: "awful (to hear)", pinyin: "nán tīng", tones: ["nān tīng", "nán tīng", "nǎn tīng", "nàn tīng"], correct: 1, toneNote: "Tone 2 + 1", imgFile: "nanting.jpg" },
+        { ch: "突然", meaning: "sudden", pinyin: "tú rán", tones: ["tū rán", "tú rán", "tǔ rán", "tù rán"], correct: 1, toneNote: "Tone 2 + 2", imgFile: "turan.jpg" },
+        { ch: "無聊", meaning: "boring", pinyin: "wú liáo", tones: ["wū liáo", "wú liáo", "wǔ liáo", "wù liáo"], correct: 1, toneNote: "Tone 2 + 2", imgFile: "wuliao.jpg" },
+        { ch: "危險", meaning: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 0, toneNote: "Tone 1 + 3", imgFile: "weixian.jpg" },
+        { ch: "糟糕", meaning: "terrible", pinyin: "zāo gāo", tones: ["zāo gāo", "záo gāo", "zǎo gāo", "zào gāo"], correct: 0, toneNote: "Tone 1 + 1", imgFile: "zaogao.jpg" }
     ];
 
-    let playerName = "";
-    let isHardMode = false;
-    let currentLevel = 1;
     let currentQuestions = [];
     let currentIndex = 0;
-    let isAnswered = false;
-    
-    // 分數與計時變數
-    let score = 0;
-    let currentStreak = 0;
-    const BASE_SCORE = 100;
-    
-    let timerInterval;
-    let timeLeft = 10;
+    let wrongAttempts = 0; 
+    let streak = 0;
+    let isLocked = false;
 
-    // 畫面切換控制
-    function showScreen(screenId) {
+    // Quản lý chuyển đổi màn hình (Screen transition)
+    function switchScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
-        clearInterval(timerInterval); // 確保離開遊戲畫面時停止計時
     }
 
-    // 1. 登入邏輯
-    function login() {
-        const nameInput = document.getElementById('player-name').value.trim();
-        if (nameInput === "") {
-            alert("請輸入名字才能開始挑戰喔！");
-            return;
-        }
-        playerName = nameInput;
-        document.getElementById('welcome-msg').innerText = `準備好了嗎，${playerName}？`;
-        showScreen('home-screen');
-    }
-
-    // 2. 難易度設定
-    function setDifficulty(mode) {
-        isHardMode = (mode === 'hard');
-        document.getElementById('diff-easy').classList.toggle('active', !isHardMode);
-        document.getElementById('diff-hard').classList.toggle('active', isHardMode);
-    }
-
-    // 3. 遊戲初始化
     function startGame(level) {
-        currentLevel = level;
+        switchScreen('game-screen');
         currentQuestions = level === 1 ? [...level1Data] : [...level2Data];
-        currentQuestions.sort(() => Math.random() - 0.5); // 打亂題庫
-        
+        currentQuestions.sort(() => Math.random() - 0.5); // Randomize
         currentIndex = 0;
-        score = 0;
-        currentStreak = 0;
-        
-        updateScoreUI();
-        document.getElementById('level-display').innerText = `Level ${level} ` + (isHardMode ? "🔥" : "🌟");
-        
-        // 處理計時條顯示
-        document.getElementById('timer-bar-container').style.display = isHardMode ? "block" : "none";
-        
-        showScreen('game-screen');
+        streak = 0;
+        document.getElementById('level-display').innerText = level === 1 ? "Level 1: 單音節" : "Level 2: 雙音節";
         loadQuestion();
     }
 
     function loadQuestion() {
-        isAnswered = false;
+        isLocked = false;
+        wrongAttempts = 0;
         const q = currentQuestions[currentIndex];
         
         document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
-        document.getElementById('emoji-display').innerText = q.emoji;
-        
-        document.getElementById('answer-reveal').style.display = "none";
+        document.getElementById('answer-reveal').classList.remove('active');
         document.getElementById('next-btn').style.display = "none";
         
+        // Tải Ảnh
+        const vocabImg = document.getElementById('vocab-img');
+        vocabImg.src = `assets/${q.imgFile}`;
+        vocabImg.style.display = 'block';
+        document.getElementById('img-filename').innerText = q.imgFile;
+
+        // Reset Pet
+        updatePetState('idle');
+
+        // Render nút chọn
         const optionsContainer = document.getElementById('options-container');
         optionsContainer.innerHTML = "";
-        
         q.tones.forEach((pinyin, index) => {
             const btn = document.createElement('button');
             btn.className = 'option-btn';
@@ -374,11 +281,7 @@
             optionsContainer.appendChild(btn);
         });
 
-        // ⭐ 自動播放聲音！(因為使用者已經點擊過開始按鈕，所以不會被瀏覽器阻擋)
         playSound();
-
-        // 啟動計時器 (如果選了挑戰模式)
-        if (isHardMode) startTimer();
     }
 
     function playSound() {
@@ -389,103 +292,74 @@
         speechSynthesis.speak(utterance);
     }
 
-    // 計時器邏輯
-    function startTimer() {
-        clearInterval(timerInterval);
-        timeLeft = 10;
-        const timerFill = document.getElementById('timer-fill');
-        timerFill.style.width = '100%';
-        timerFill.style.backgroundColor = 'var(--correct-color)';
-        timerFill.style.transition = 'none'; // 瞬間回滿
+    // Trạng thái Pet NPC
+    function updatePetState(state) {
+        const petImg = document.getElementById('pet-img');
+        const petStatus = document.getElementById('pet-status');
         
-        setTimeout(() => {
-            timerFill.style.transition = 'width 1s linear, background-color 0.3s';
-            
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                const percentage = (timeLeft / 10) * 100;
-                timerFill.style.width = `${percentage}%`;
-                
-                if (timeLeft <= 4) timerFill.style.backgroundColor = 'var(--danger-color)'; // 倒數變紅
-                if (timeLeft <= 0) handleTimeOut(); // 時間到
-            }, 1000);
-        }, 50);
-    }
-
-    function handleTimeOut() {
-        if (isAnswered) return;
-        clearInterval(timerInterval);
-        isAnswered = true;
-        currentStreak = 0; // 中斷連擊
-        updateScoreUI();
-        
-        const q = currentQuestions[currentIndex];
-        const buttons = document.querySelectorAll('.option-btn');
-        buttons[q.correctIndex].classList.add('correct'); // 直接顯示正確答案
-        
-        document.getElementById('reveal-char').innerText = q.ch;
-        document.getElementById('reveal-meaning').innerHTML = `<span style="color:red;">⏱️ 時間到！</span> ${q.meaning}`;
-        document.getElementById('answer-reveal').style.display = "block";
-        document.getElementById('next-btn').style.display = "block";
+        if (state === 'idle') {
+            petImg.src = "assets/dog_idle.gif";
+            petStatus.innerText = "Cún đang đợi bạn...";
+            petStatus.style.color = "var(--text-main)";
+        } else if (state === 'happy') {
+            petImg.src = "assets/dog_happy.gif";
+            petStatus.innerText = "Ngon quá! Cún rất vui!";
+            petStatus.style.color = "var(--correct-dark)";
+        } else if (state === 'sad') {
+            petImg.src = "assets/dog_sad.gif";
+            petStatus.innerText = "Sai rồi... cún đói...";
+            petStatus.style.color = "var(--secondary-dark)";
+        } else if (state === 'cry') {
+            petImg.src = "assets/dog_cry.gif";
+            petStatus.innerText = "Huhu cún khóc đây!";
+            petStatus.style.color = "var(--wrong)";
+        }
+        document.getElementById('streak-counter').innerText = `🔥 Liên kích: ${streak}`;
     }
 
     function checkAnswer(selectedIndex, btnElement) {
-        if (isAnswered) return;
-        clearInterval(timerInterval); // 點擊後停止計時
-        
+        if (isLocked) return;
         const q = currentQuestions[currentIndex];
         
-        if (selectedIndex === q.correctIndex) {
+        if (selectedIndex === q.correct) {
             btnElement.classList.add('correct');
-            isAnswered = true;
-            currentStreak++;
-            
-            // 挑戰模式額外加分 (時間剩越多分數越高)
-            let timeBonus = isHardMode ? (timeLeft * 5) : 0;
-            let comboBonus = (currentStreak > 1) ? (currentStreak - 1) * 20 : 0;
-            let pointsEarned = BASE_SCORE + comboBonus + timeBonus;
-            
-            score += pointsEarned;
-            showFloatingPoints(pointsEarned);
-            updateScoreUI();
-            
-            document.getElementById('reveal-char').innerText = q.ch;
-            document.getElementById('reveal-meaning').innerText = q.meaning;
-            document.getElementById('answer-reveal').style.display = "block";
-            document.getElementById('next-btn').style.display = "block";
+            streak++;
+            isLocked = true;
+            updatePetState('happy');
+            showAnswerReveal(q);
         } else {
+            wrongAttempts++;
+            streak = 0;
             btnElement.classList.add('wrong');
-            currentStreak = 0;
-            updateScoreUI();
-            setTimeout(() => { btnElement.classList.remove('wrong'); }, 400);
+            
+            // Xóa class wrong để nút có thể rung lại nếu bấm sai tiếp
+            setTimeout(() => { btnElement.classList.remove('wrong'); }, 400); 
+            btnElement.disabled = true;
+
+            if (wrongAttempts === 1) {
+                updatePetState('sad');
+            } else if (wrongAttempts >= 2) {
+                // Khóa sau 2 lần sai
+                isLocked = true;
+                updatePetState('cry');
+                
+                // Highlight đáp án đúng
+                const buttons = document.querySelectorAll('.option-btn');
+                buttons[q.correct].classList.add('correct');
+                
+                showAnswerReveal(q);
+            }
         }
     }
 
-    // UI 更新
-    function updateScoreUI() {
-        document.getElementById('score').innerText = score;
-        const streakIndicator = document.getElementById('streak-indicator');
+    function showAnswerReveal(q) {
+        document.getElementById('reveal-char').innerText = q.ch;
+        document.getElementById('reveal-pinyin-text').innerText = q.pinyin;
+        document.getElementById('reveal-tone-note').innerText = `(${q.toneNote})`;
+        document.getElementById('reveal-meaning').innerText = q.meaning;
         
-        if (currentStreak > 1) {
-            streakIndicator.innerText = `🔥 ${currentStreak} 連擊!`;
-            streakIndicator.classList.add('active');
-            streakIndicator.style.animation = 'none';
-            streakIndicator.offsetHeight; 
-            streakIndicator.style.animation = null;
-        } else {
-            streakIndicator.classList.remove('active');
-        }
-    }
-
-    function showFloatingPoints(points) {
-        const visualBox = document.getElementById('visual-box');
-        const floatingEl = document.createElement('div');
-        floatingEl.className = 'floating-points';
-        floatingEl.innerText = `+${points}`;
-        floatingEl.style.left = `${40 + Math.random() * 20}%`;
-        floatingEl.style.top = '40%';
-        visualBox.appendChild(floatingEl);
-        setTimeout(() => { floatingEl.remove(); }, 1000);
+        document.getElementById('answer-reveal').classList.add('active');
+        document.getElementById('next-btn').style.display = "block";
     }
 
     function nextQuestion() {
@@ -493,67 +367,8 @@
         if (currentIndex < currentQuestions.length) {
             loadQuestion();
         } else {
-            endGame();
+            switchScreen('end-screen');
         }
-    }
-
-    // 4. 遊戲結算與本機排行榜
-    function endGame() {
-        showScreen('end-screen');
-        
-        // 評級判定
-        const maxPossibleScore = currentQuestions.length * BASE_SCORE * (isHardMode ? 1.5 : 1.2); 
-        const scoreRatio = score / maxPossibleScore;
-        let rankHtml = "";
-        
-        if (scoreRatio >= 0.85) rankHtml = `<div class="rank-display rank-S">🏆 S</div><p>完美！聲調大師！</p>`;
-        else if (scoreRatio >= 0.6) rankHtml = `<div class="rank-display rank-A">🌟 A</div><p>非常優秀！</p>`;
-        else if (scoreRatio >= 0.4) rankHtml = `<div class="rank-display rank-B">👍 B</div><p>表現不錯，繼續保持！</p>`;
-        else rankHtml = `<div class="rank-display rank-C">💪 C</div><p>再接再厲喔！</p>`;
-
-        document.getElementById('rank-result').innerHTML = `
-            ${rankHtml}
-            <p style="font-size:1.2em;">你的得分：<strong>${score}</strong></p>
-        `;
-
-        saveAndDisplayLeaderboard();
-    }
-
-    function saveAndDisplayLeaderboard() {
-        // 從 localStorage 抓取舊資料，若無則建立空陣列
-        let leaderboard = JSON.parse(localStorage.getItem('toneGameLeaderboard')) || [];
-        
-        // 加入這次的新成績
-        const modeText = isHardMode ? "(挑戰)" : "(輕鬆)";
-        const newEntry = { 
-            name: playerName, 
-            score: score, 
-            levelStr: `L${currentLevel} ${modeText}`
-        };
-        leaderboard.push(newEntry);
-        
-        // 排序：分數高的在前面
-        leaderboard.sort((a, b) => b.score - a.score);
-        
-        // 只保留前 5 名
-        leaderboard = leaderboard.slice(0, 5);
-        
-        // 存回 localStorage
-        localStorage.setItem('toneGameLeaderboard', JSON.stringify(leaderboard));
-        
-        // 顯示在畫面上
-        const listEl = document.getElementById('leaderboard-list');
-        listEl.innerHTML = "";
-        
-        leaderboard.forEach(entry => {
-            const li = document.createElement('li');
-            li.innerText = `${entry.name} - ${entry.score} 分 [${entry.levelStr}]`;
-            // 如果是這次剛打出來的成績，用紅色高亮顯示
-            if (entry.name === playerName && entry.score === score) {
-                li.classList.add('highlight-me');
-            }
-            listEl.appendChild(li);
-        });
     }
 </script>
 
