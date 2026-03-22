@@ -31,7 +31,7 @@
             height: 100vh; overflow: hidden; position: relative;
         }
 
-        /* Nút TẮT/BẬT ÂM THANH (Góc trên bên phải) */
+        /* Nút TẮT/BẬT ÂM THANH */
         .mute-btn {
             position: absolute; top: 20px; right: 20px; z-index: 1000;
             background: white; border: 3px solid #E9ECEF; border-radius: 50%;
@@ -109,7 +109,7 @@
         /* --- MÀN HÌNH ĐÔI (Game & End) --- */
         .left-wrapper { flex: 6.5; display: flex; flex-direction: column; height: 100%; }
         
-        /* Cửa sổ Chú cún (Màu Hồng / Viền Vàng) */
+        /* Cửa sổ Chú cún */
         .right-panel { 
             flex: 3.5; padding: 25px; align-items: center; justify-content: center; text-align: center; 
             background-color: #FFE4E1; border-color: #FFB6C1;
@@ -203,7 +203,7 @@
             <img src="assets/dog_idle.gif" class="welcome-pet" alt="Cute Puppy" onerror="this.src='https://via.placeholder.com/180/FFF3CD/FFD700?text=Puppy'">
             
             <input type="text" id="player-name" class="input-name" placeholder="Your name / Tên của bạn..." autocomplete="off">
-            <button class="btn" onclick="goToSettings()">Start / Bắt đầu</button>
+            <button class="btn" onclick="goToSettings()" id="btn-start">Start / Bắt đầu</button>
         </div>
 
         <div class="panel center-panel screen" id="settings-screen">
@@ -309,7 +309,7 @@
     let isMuted = false;
     const dogBarkAudio = new Audio('assets/dog_bark.wav');
     
-    // Tự động khởi tạo Audio Context cho Web Audio API
+    // Web Audio API cho tiếng Ting/Bụp
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
 
@@ -324,11 +324,10 @@
     function playDogBark() {
         if (!isMuted) {
             dogBarkAudio.currentTime = 0;
-            dogBarkAudio.play().catch(e => console.log("Audio play blocked by browser."));
+            dogBarkAudio.play().catch(e => console.log("Audio blocked."));
         }
     }
 
-    // Tiếng "Ting" (Đúng) và "Bụp" (Sai)
     function playSFX(isCorrect) {
         if (isMuted) return;
         if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -344,16 +343,14 @@
             osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1); 
             gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.3);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.3);
         } else {
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(250, audioCtx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
             gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
             gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
-            osc.start();
-            osc.stop(audioCtx.currentTime + 0.2);
+            osc.start(); osc.stop(audioCtx.currentTime + 0.2);
         }
     }
 
@@ -369,7 +366,7 @@
         }, 150);
     }
 
-    // --- 1. TỪ ĐIỂN ĐA NGÔN NGỮ (i18n) - ENGLISH DEFAULT ---
+    // --- 1. TỪ ĐIỂN ĐA NGÔN NGỮ (i18n) ---
     const i18n = {
         en: {
             welcomeIntro: "Listen and choose the correct tone to feed the puppy!",
@@ -378,7 +375,7 @@
             btnListen: "🔊 Listen again", btnQuit: "Quit", btnNext: "Next ➔", 
             btnReplay: "Play Again (Same Settings)", btnContinue: "Continue (Change Settings)", btnHome: "Back to Home",
             petIdle: "Puppy is listening...", petHappy: "Yummy! Puppy is happy!", petSad: "Wrong... puppy is hungry...", petCry: "So hard! Puppy is crying!", petEnd: "Awesome! Puppy is full!",
-            lblScore: "Score:", lblStreak: "Combo:",
+            lblScore: "Score:", lblStreak: "Combo:", pts: "pts",
             warnFail: "2 mistakes! Here is the answer 👀", warnTime: "Time's up! Here is the answer ⏱️",
             endTitle: "Well Done!", endSub: "The puppy is very full and happy."
         },
@@ -389,7 +386,7 @@
             btnListen: "🔊 Nghe lại", btnQuit: "Bỏ cuộc", btnNext: "Tiếp tục ➔", 
             btnReplay: "Chơi lại (Cùng thiết lập)", btnContinue: "Chơi tiếp (Đổi cài đặt)", btnHome: "Về Trang chủ",
             petIdle: "Cún đang nghe...", petHappy: "Đúng rồi! Ngon quá!", petSad: "Sai rồi... cún đói...", petCry: "Huhu khó quá!", petEnd: "Tuyệt vời! Cún no rồi!",
-            lblScore: "Điểm số:", lblStreak: "Chuỗi đúng:",
+            lblScore: "Điểm số:", lblStreak: "Chuỗi đúng:", pts: "điểm",
             warnFail: "Đã sai 2 lần! Đây là đáp án đúng 👀", warnTime: "Hết giờ! Đây là đáp án đúng ⏱️",
             endTitle: "Hoàn thành!", endSub: "Cún con rất no bụng và hạnh phúc."
         }
@@ -484,35 +481,39 @@
         document.getElementById('mode-speed').classList.toggle('active', isSpeedMode);
     }
 
+    // Hàm Dịch ngôn ngữ được bọc màng bảo vệ siêu an toàn (Optional Chaining ?.)
     function applyLanguage(lang) {
         const t = i18n[lang];
-        document.getElementById('welcome-intro').innerText = t.welcomeIntro;
-        document.getElementById('settings-title').innerText = t.settingsTitle;
-        document.getElementById('lbl-lang').innerText = t.lblLang;
-        document.getElementById('lbl-level').innerText = t.lblLevel;
-        document.getElementById('lbl-mode').innerText = t.lblMode;
-        document.getElementById('mode-relax').innerText = t.btnRelax;
-        document.getElementById('mode-speed').innerText = t.btnSpeed;
-        document.getElementById('btn-play-now').innerText = t.btnPlay;
-        document.getElementById('btn-back').innerText = t.btnBack;
-        document.getElementById('btn-listen').innerText = t.btnListen;
-        document.getElementById('btn-quit').innerText = t.btnQuit;
-        document.getElementById('btn-next').innerText = t.btnNext;
-        document.getElementById('btn-replay').innerText = t.btnReplay;
-        document.getElementById('btn-continue').innerText = t.btnContinue;
-        document.getElementById('btn-home').innerText = t.btnHome;
-        document.getElementById('lbl-score').innerText = t.lblScore;
-        document.getElementById('lbl-streak').innerText = t.lblStreak;
-        document.getElementById('end-title').innerText = t.endTitle;
-        document.getElementById('end-subtitle').innerText = t.endSub;
-        if(!isLocked) document.getElementById('pet-status').innerText = t.petIdle;
+        if (!t) return;
+        
+        const el = (id) => document.getElementById(id);
+
+        if(el('welcome-intro')) el('welcome-intro').innerText = t.welcomeIntro;
+        if(el('settings-title')) el('settings-title').innerText = t.settingsTitle;
+        if(el('lbl-lang')) el('lbl-lang').innerText = t.lblLang;
+        if(el('lbl-level')) el('lbl-level').innerText = t.lblLevel;
+        if(el('lbl-mode')) el('lbl-mode').innerText = t.lblMode;
+        if(el('mode-relax')) el('mode-relax').innerText = t.btnRelax;
+        if(el('mode-speed')) el('mode-speed').innerText = t.btnSpeed;
+        if(el('btn-play-now')) el('btn-play-now').innerText = t.btnPlay;
+        if(el('btn-back')) el('btn-back').innerText = t.btnBack;
+        if(el('btn-listen')) el('btn-listen').innerText = t.btnListen;
+        if(el('btn-quit')) el('btn-quit').innerText = t.btnQuit;
+        if(el('next-btn')) el('next-btn').innerText = t.btnNext;
+        if(el('btn-replay')) el('btn-replay').innerText = t.btnReplay;
+        if(el('btn-continue')) el('btn-continue').innerText = t.btnContinue;
+        if(el('btn-home')) el('btn-home').innerText = t.btnHome;
+        if(el('lbl-score')) el('lbl-score').innerText = t.lblScore;
+        if(el('lbl-streak')) el('lbl-streak').innerText = t.lblStreak;
+        if(el('end-title')) el('end-title').innerText = t.endTitle;
+        if(el('end-subtitle')) el('end-subtitle').innerText = t.endSub;
+        
+        if(!isLocked && el('pet-status')) el('pet-status').innerText = t.petIdle;
     }
 
-    // Khởi động Game
     function startGame() {
         showView('split-view', 'game-screen');
-        // Xóa âm thanh chó sủa đầu game theo yêu cầu
-        // playDogBark(); 
+        // Không phát tiếng chó sủa ở đầu game nữa (Đã xóa 100%)
 
         currentQuestions = selectedLevel === 1 ? [...level1Data] : [...level2Data];
         currentQuestions.sort(() => Math.random() - 0.5); 
@@ -668,7 +669,7 @@
 
     function endGame() {
         showView('split-view', 'end-screen');
-        playDogBark(); // Âm thanh chó sủa chỉ phát 1 lần ở màn hình Kết thúc này
+        playDogBark(); // Chỉ kêu Gâu Gâu duy nhất 1 lần ở màn hình này!
         updatePetState('happy');
         document.getElementById('pet-status').innerText = i18n[currentLang].petEnd;
         saveLeaderboard();
@@ -684,14 +685,17 @@
         
         const listEl = document.getElementById('leaderboard-list');
         listEl.innerHTML = "";
+        const ptsText = i18n[currentLang].pts; // Lấy chữ "điểm" hay "pts"
+        
         lb.forEach((entry, idx) => {
             const li = document.createElement('li');
             if (entry.name === playerName && entry.score === score) li.classList.add('highlight');
-            li.innerHTML = `<span>#${idx+1} ${entry.name} [${entry.level}]</span> <span>${entry.score} pts</span>`;
+            li.innerHTML = `<span>#${idx+1} ${entry.name} [${entry.level}]</span> <span>${entry.score} ${ptsText}</span>`;
             listEl.appendChild(li);
         });
     }
 
+    // Khởi tạo ngôn ngữ ban đầu
     applyLanguage('en'); 
 </script>
 
