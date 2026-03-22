@@ -339,7 +339,6 @@
         gainNode.connect(audioCtx.destination);
         
         if (isCorrect) {
-            // Tiếng "Ting" trong trẻo
             osc.type = 'sine';
             osc.frequency.setValueAtTime(880, audioCtx.currentTime); 
             osc.frequency.exponentialRampToValueAtTime(1760, audioCtx.currentTime + 0.1); 
@@ -348,7 +347,6 @@
             osc.start();
             osc.stop(audioCtx.currentTime + 0.3);
         } else {
-            // Tiếng "Bụp" trầm buồn
             osc.type = 'triangle';
             osc.frequency.setValueAtTime(250, audioCtx.currentTime);
             osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.2);
@@ -360,7 +358,7 @@
     }
 
     function playSoundTTS() {
-        window.speechSynthesis.cancel(); // Xóa giọng cũ
+        window.speechSynthesis.cancel(); 
         if (isMuted) return;
         setTimeout(() => {
             const q = currentQuestions[currentIndex];
@@ -422,14 +420,13 @@
         { ch: "難聽", meaningVN: "khó nghe", meaningEN: "awful", pinyin: "nán tīng", tones: ["nān tīng", "nán tīng", "nǎn tīng", "nàn tīng"], correct: 1, noteVN: "Thanh 2 + Thanh 1", noteEN: "Tone 2 + Tone 1", imgFile: "nanting.jpg" },
         { ch: "突然", meaningVN: "đột nhiên", meaningEN: "sudden", pinyin: "tú rán", tones: ["tū rán", "tú rán", "tǔ rán", "tù rán"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "turan.jpg" },
         { ch: "無聊", meaningVN: "nhàm chán", meaningEN: "boring", pinyin: "wú liáo", tones: ["wū liáo", "wú liáo", "wǔ liáo", "wù liáo"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "wuliao.jpg" },
-        // Cập nhật chuẩn Đài Loan: wéi xiǎn
         { ch: "危險", meaningVN: "nguy hiểm", meaningEN: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 1, noteVN: "Thanh 2 + Thanh 3", noteEN: "Tone 2 + Tone 3", imgFile: "weixian.jpg" },
         { ch: "糟糕", meaningVN: "tồi tệ", meaningEN: "terrible", pinyin: "zāo gāo", tones: ["zāo gāo", "záo gāo", "zǎo gāo", "zào gāo"], correct: 0, noteVN: "Thanh 1 + Thanh 1", noteEN: "Tone 1 + Tone 1", imgFile: "zaogao.jpg" }
     ];
 
     // --- 3. BIẾN TRẠNG THÁI ---
     let playerName = "Guest";
-    let currentLang = 'en'; // Mặc định là Tiếng Anh
+    let currentLang = 'en'; 
     let selectedLevel = 1;
     let isSpeedMode = false;
     
@@ -452,7 +449,7 @@
 
     function goHome() {
         document.getElementById('player-name').value = ""; 
-        document.getElementById('mute-btn').style.display = "none"; // Ẩn nút mute ở trang chủ
+        document.getElementById('mute-btn').style.display = "none"; 
         showView('single-view', 'welcome-screen');
     }
 
@@ -460,9 +457,9 @@
         const nameInput = document.getElementById('player-name').value.trim();
         if(nameInput !== "") playerName = nameInput;
         
-        document.getElementById('mute-btn').style.display = "flex"; // Hiện nút mute
+        document.getElementById('mute-btn').style.display = "flex"; 
         showView('single-view', 'settings-screen');
-        applyLanguage(currentLang); // Áp dụng ngôn ngữ mặc định (EN)
+        applyLanguage(currentLang); 
     }
     
     function backToSettings() {
@@ -514,7 +511,8 @@
     // Khởi động Game
     function startGame() {
         showView('split-view', 'game-screen');
-        playDogBark(); // Âm thanh chó sủa chào sân
+        // Xóa âm thanh chó sủa đầu game theo yêu cầu
+        // playDogBark(); 
 
         currentQuestions = selectedLevel === 1 ? [...level1Data] : [...level2Data];
         currentQuestions.sort(() => Math.random() - 0.5); 
@@ -580,7 +578,7 @@
     function handleTimeOut(q, t) {
         if (isLocked) return;
         isLocked = true; streak = 0;
-        playSFX(false); // Phát âm báo sai
+        playSFX(false); 
         updatePetState('cry');
         
         const buttons = document.querySelectorAll('.option-btn');
@@ -617,13 +615,13 @@
             btnElement.classList.add('correct');
             streak++; score += (100 + streak * 10);
             isLocked = true;
-            playSFX(true); // Phát tiếng Ting
+            playSFX(true); 
             updatePetState('happy');
             showAnswerReveal(q, false, "");
         } else {
             wrongAttempts++; streak = 0;
             btnElement.classList.add('wrong');
-            playSFX(false); // Phát tiếng Bụp
+            playSFX(false); 
             setTimeout(() => { btnElement.classList.remove('wrong'); }, 400); 
             btnElement.disabled = true;
 
@@ -659,7 +657,7 @@
         document.getElementById('answer-reveal-wrapper').classList.add('active');
         document.getElementById('next-btn').style.display = "block";
         
-        playSoundTTS(); // Phát lại từ vựng
+        playSoundTTS(); 
     }
 
     function nextQuestion() {
@@ -670,7 +668,7 @@
 
     function endGame() {
         showView('split-view', 'end-screen');
-        playDogBark(); // Chó sủa ăn mừng cuối game
+        playDogBark(); // Âm thanh chó sủa chỉ phát 1 lần ở màn hình Kết thúc này
         updatePetState('happy');
         document.getElementById('pet-status').innerText = i18n[currentLang].petEnd;
         saveLeaderboard();
@@ -694,7 +692,6 @@
         });
     }
 
-    // Thiết lập mặc định khi vừa mở web
     applyLanguage('en'); 
 </script>
 
