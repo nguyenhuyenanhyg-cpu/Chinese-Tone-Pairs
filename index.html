@@ -409,15 +409,18 @@
 
     const level2Data = [
         { ch: "高興", meaningVN: "vui vẻ", meaningEN: "happy", pinyin: "gāo xìng", tones: ["gāo xīng", "gāo xíng", "gāo xǐng", "gāo xìng"], correct: 3, noteVN: "Thanh 1 + Thanh 4", noteEN: "Tone 1 + Tone 4", imgFile: "gaoxing.jpg" },
-        { ch: "便宜", meaningVN: "rẻ", meaningEN: "cheap", pinyin: "pián yí", tones: ["piān yí", "pián yí", "piǎn yí", "piàn yí"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "pianyi.jpg" },
+        // Thêm tts: "駢儀" để ép máy đọc rõ pián yí (Thanh 2 + 2)
+        { ch: "便宜", meaningVN: "rẻ", meaningEN: "cheap", pinyin: "pián yí", tones: ["piān yí", "pián yí", "piǎn yí", "piàn yí"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "pianyi.jpg", tts: "駢儀" },
         { ch: "很好", meaningVN: "rất tốt", meaningEN: "very good", pinyin: "hěn hǎo", tones: ["hěn hǎo", "hén hǎo", "hèn hǎo", "hēn hǎo"], correct: 0, noteVN: "Thanh 3 + Thanh 3 / Biến điệu", noteEN: "Tone 3 + Tone 3 / Sandhi", imgFile: "henhao.jpg" },
         { ch: "不錯", meaningVN: "không tồi", meaningEN: "not bad", pinyin: "bú cuò", tones: ["bù cuò", "bú cuò", "bǔ cuò", "bū cuò"], correct: 1, noteVN: "Thanh 2 + Thanh 4 / Biến điệu", noteEN: "Tone 2 + Tone 4 / Sandhi", imgFile: "bucuo.jpg" },
         { ch: "好看", meaningVN: "đẹp", meaningEN: "good-looking", pinyin: "hǎo kàn", tones: ["hāo kàn", "háo kàn", "hǎo kàn", "hào kàn"], correct: 2, noteVN: "Thanh 3 + Thanh 4", noteEN: "Tone 3 + Tone 4", imgFile: "haokan.jpg" },
-        { ch: "漂亮", meaningVN: "xinh đẹp", meaningEN: "pretty", pinyin: "piào liàng", tones: ["piāo liàng", "piáo liàng", "piǎo liàng", "piào liàng"], correct: 3, noteVN: "Thanh 4 + Thanh 4", noteEN: "Tone 4 + Tone 4", imgFile: "piaoliang.jpg" },
+        // Thêm tts: "票量" để ép máy đọc rõ piào liàng (Thanh 4 + 4) thay vì thanh nhẹ
+        { ch: "漂亮", meaningVN: "xinh đẹp", meaningEN: "pretty", pinyin: "piào liàng", tones: ["piāo liàng", "piáo liàng", "piǎo liàng", "piào liàng"], correct: 3, noteVN: "Thanh 4 + Thanh 4", noteEN: "Tone 4 + Tone 4", imgFile: "piaoliang.jpg", tts: "票量" },
         { ch: "難聽", meaningVN: "khó nghe", meaningEN: "awful", pinyin: "nán tīng", tones: ["nān tīng", "nán tīng", "nǎn tīng", "nàn tīng"], correct: 1, noteVN: "Thanh 2 + Thanh 1", noteEN: "Tone 2 + Tone 1", imgFile: "nanting.jpg" },
         { ch: "突然", meaningVN: "đột nhiên", meaningEN: "sudden", pinyin: "tú rán", tones: ["tū rán", "tú rán", "tǔ rán", "tù rán"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "turan.jpg" },
         { ch: "無聊", meaningVN: "nhàm chán", meaningEN: "boring", pinyin: "wú liáo", tones: ["wū liáo", "wú liáo", "wǔ liáo", "wù liáo"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "wuliao.jpg" },
-        { ch: "危險", meaningVN: "nguy hiểm", meaningEN: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 1, noteVN: "Thanh 2 + Thanh 3", noteEN: "Tone 2 + Tone 3", imgFile: "weixian.jpg" },
+        // Thêm tts: "維險" để ép máy đọc wéi xiǎn (Thanh 2 + 3)
+        { ch: "危險", meaningVN: "nguy hiểm", meaningEN: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 1, noteVN: "Thanh 2 + Thanh 3", noteEN: "Tone 2 + Tone 3", imgFile: "weixian.jpg", tts: "維險" },
         { ch: "糟糕", meaningVN: "tồi tệ", meaningEN: "terrible", pinyin: "zāo gāo", tones: ["zāo gāo", "záo gāo", "zǎo gāo", "zào gāo"], correct: 0, noteVN: "Thanh 1 + Thanh 1", noteEN: "Tone 1 + Tone 1", imgFile: "zaogao.jpg" }
     ];
 
