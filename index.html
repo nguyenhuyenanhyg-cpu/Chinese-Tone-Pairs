@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>華語聲調大挑戰 - 專業版</title>
+    <title>Luyện thanh điệu, chăm cún yêu | Paws & Tones</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap');
 
         :root {
             --primary: #FF8F9C;     
@@ -28,48 +28,50 @@
             background-size: 40px 40px; background-position: 0 0, 20px 20px;
             color: var(--text-main);
             display: flex; justify-content: center; align-items: center;
-            height: 100vh; /* Vừa khít màn hình, không cuộn */
-            overflow: hidden;
+            height: 100vh; overflow: hidden;
         }
 
-        /* KHUNG GAME CHÍNH (Chia 2 nửa) */
+        /* KHUNG CHỨA CHUNG */
         .app-container {
-            display: flex; gap: 20px; width: 95%; max-width: 1000px; height: 90vh;
-        }
-        
-        /* Mobile Responsive */
-        @media (max-width: 768px) {
-            body { height: auto; overflow-y: auto; padding: 20px 10px; }
-            .app-container { flex-direction: column; height: auto; min-height: 100vh; }
+            width: 95%; max-width: 1000px; height: 90vh; position: relative;
+            display: flex; justify-content: center; align-items: center;
         }
 
-        /* Các khối Panel */
+        /* Các Panel chung */
         .panel {
             background-color: var(--card-bg); border-radius: 24px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.08);
-            padding: 25px; border: 3px solid #FFF0F5;
-            display: flex; flex-direction: column; position: relative;
+            border: 3px solid #FFF0F5; display: flex; flex-direction: column;
         }
-        .left-panel { flex: 6.5; justify-content: space-between; }
-        .right-panel { flex: 3.5; align-items: center; justify-content: center; text-align: center; }
 
         /* Chuyển cảnh mượt mà */
-        .screen { display: none; height: 100%; width: 100%; animation: fadeIn 0.4s ease-out; }
+        .screen { display: none; width: 100%; height: 100%; animation: fadeIn 0.4s ease-out; }
         .screen.active { display: flex; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Tiêu đề & Form */
-        h1 { color: var(--primary); margin-bottom: 8px; font-size: 2em; font-weight: 800; line-height: 1.2; }
-        p.subtitle { color: #888; margin-bottom: 20px; font-size: 1.05em; font-weight: 700;}
-        
-        .input-name {
-            width: 100%; padding: 14px; font-size: 1.2em; border: 3px solid #E9ECEF;
-            border-radius: 16px; margin-bottom: 20px; text-align: center; font-weight: 700; color: var(--text-main);
-            outline: none; transition: border-color 0.2s;
+        /* MÀN HÌNH 1 & 2 & 4 (Centered Panels) */
+        .center-panel {
+            width: 100%; max-width: 500px; padding: 40px 30px; 
+            align-items: center; justify-content: center; text-align: center; margin: auto;
         }
-        .input-name:focus { border-color: var(--secondary); }
 
-        /* Nút bấm Game */
+        .game-title-vn { color: var(--primary); font-size: 2.2em; font-weight: 900; line-height: 1.2; }
+        .game-title-en { color: var(--secondary); font-size: 1.4em; font-weight: 800; margin-bottom: 5px; }
+        .game-intro { color: #888; font-size: 1.1em; font-weight: 700; margin-bottom: 25px; }
+
+        .welcome-pet {
+            width: 180px; height: 180px; border-radius: 50%; border: 6px solid #FFE4E1;
+            object-fit: cover; margin-bottom: 25px; box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+        }
+
+        .input-name {
+            width: 100%; padding: 15px; font-size: 1.2em; border: 3px solid #E9ECEF;
+            border-radius: 16px; margin-bottom: 20px; text-align: center; font-weight: 800; color: var(--text-main);
+            outline: none; transition: all 0.2s;
+        }
+        .input-name:focus { border-color: var(--secondary); box-shadow: 0 0 0 4px rgba(108, 180, 238, 0.2); }
+
+        /* Nút bấm */
         .btn {
             background-color: var(--primary); color: white; border: none;
             padding: 14px 20px; border-radius: 16px; font-size: 1.15em; font-weight: 800;
@@ -77,79 +79,95 @@
             box-shadow: 0 5px 0 var(--primary-dark); transition: all 0.1s;
         }
         .btn:active { transform: translateY(5px); box-shadow: 0 0 0 var(--primary-dark); }
-        .btn.level2 { background-color: var(--secondary); box-shadow: 0 5px 0 var(--secondary-dark); }
-        .btn.level2:active { box-shadow: 0 0 0 var(--secondary-dark); }
         .btn-secondary { background-color: #D3D3D3; box-shadow: 0 5px 0 #B0B0B0; color: #555;}
         .btn-secondary:active { box-shadow: 0 0 0 #B0B0B0; }
+        .btn-green { background-color: var(--correct); box-shadow: 0 5px 0 var(--correct-dark); }
+        .btn-green:active { box-shadow: 0 0 0 var(--correct-dark); }
 
-        /* Khung hiển thị Ảnh từ vựng (Tối ưu không bị cắt) */
-        .vocab-image-container {
-            width: 100%; flex: 1; min-height: 160px; max-height: 220px; background-color: #F8F9FA;
-            border-radius: 16px; margin-bottom: 15px; border: 3px solid #F1F3F5;
-            display: flex; justify-content: center; align-items: center; overflow: hidden; padding: 5px;
+        /* MÀN HÌNH SETTING (Cấu hình) */
+        .setting-group { width: 100%; text-align: left; margin-bottom: 20px; }
+        .setting-label { font-weight: 800; color: var(--secondary-dark); margin-bottom: 8px; display: block; font-size: 1.1em;}
+        .toggle-container { display: flex; gap: 10px; }
+        .toggle-btn {
+            flex: 1; padding: 12px 5px; border: 3px solid #E9ECEF; border-radius: 12px;
+            background: white; color: #888; font-weight: 800; cursor: pointer; transition: 0.2s; font-size: 1em;
         }
-        .vocab-image { width: 100%; height: 100%; object-fit: contain; display: none; } /* Trọn vẹn ảnh */
+        .toggle-btn.active { border-color: var(--primary); background: #FFF0F5; color: var(--primary-dark); }
 
-        /* Lưới lựa chọn Pinyin */
+        /* MÀN HÌNH 3 (Split Screen Game) */
+        .game-layout { display: flex; gap: 20px; width: 100%; height: 100%; flex-direction: row; }
+        .left-panel { flex: 6.5; padding: 25px; justify-content: space-between; position: relative;}
+        .right-panel { flex: 3.5; padding: 25px; align-items: center; justify-content: center; text-align: center; }
+
+        /* Thanh đếm giờ */
+        .timer-bar-bg { width: 100%; height: 8px; background: #E9ECEF; border-radius: 4px; margin-bottom: 15px; overflow: hidden; display: none; }
+        .timer-bar-fill { height: 100%; background: var(--correct); width: 100%; transition: width 0.1s linear, background-color 0.3s; }
+
+        /* Ảnh từ vựng & Pinyin */
+        .vocab-image-container {
+            width: 100%; flex: 1; min-height: 140px; max-height: 200px; background-color: #F8F9FA;
+            border-radius: 16px; margin-bottom: 15px; border: 3px solid #F1F3F5;
+            display: flex; justify-content: center; align-items: center; padding: 5px;
+        }
+        .vocab-image { width: 100%; height: 100%; object-fit: contain; display: none; }
+
         .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 15px; }
         .option-btn {
             background-color: white; border: 3px solid #E9ECEF; padding: 12px 5px;
-            font-size: 1.2em; font-weight: 700; border-radius: 16px; cursor: pointer; 
+            font-size: 1.25em; font-weight: 800; border-radius: 16px; cursor: pointer; 
             color: var(--text-main); transition: all 0.2s; box-shadow: 0 4px 0 #E9ECEF;
         }
         .option-btn:active:not(:disabled) { transform: translateY(4px); box-shadow: 0 0 0 #E9ECEF; }
-        
-        /* Trạng thái nút bấm */
         .option-btn.correct { background-color: var(--correct); border-color: var(--correct-dark); color: white; box-shadow: 0 4px 0 var(--correct-dark); opacity: 1 !important;}
         .option-btn.wrong { background-color: var(--wrong); border-color: #D9534F; color: white; box-shadow: 0 4px 0 #D9534F; animation: shake 0.4s; }
-        .option-btn.faded { opacity: 0.3; pointer-events: none; box-shadow: none; transform: translateY(4px); } /* Làm mờ khi sai 2 lần */
+        .option-btn.faded { opacity: 0.3; pointer-events: none; box-shadow: none; transform: translateY(4px); }
         .option-btn.glowing { animation: pulseGlow 1.5s infinite; border-color: var(--correct-dark); background-color: #e8f5e9; color: var(--correct-dark); }
 
-        /* Cảnh báo Sai 2 lần & Đáp án gom vào giữa */
+        /* Đáp án Gom Giữa */
         .answer-reveal-wrapper { display: none; flex-direction: column; margin-bottom: 15px; }
         .answer-reveal-wrapper.active { display: flex; animation: fadeIn 0.3s; }
-        
         .warning-banner {
-            background-color: #FFF3CD; color: #856404; text-align: center; padding: 6px;
-            border-radius: 10px 10px 0 0; font-weight: 800; font-size: 0.9em; border: 2px dashed #FFD700; border-bottom: none;
-            display: none; /* Chỉ hiện khi sai 2 lần */
+            background-color: #FFF3CD; color: #856404; text-align: center; padding: 8px;
+            border-radius: 12px 12px 0 0; font-weight: 800; font-size: 0.95em; border: 2px dashed #FFD700; border-bottom: none;
+            display: none;
         }
-        
         .answer-reveal {
-            background-color: #FFF8DC; border: 2px dashed #FFD700;
-            padding: 12px 20px; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; gap: 30px; /* Gom vào giữa */
+            background-color: #FFF8DC; border: 2px dashed #FFD700; padding: 12px 20px; border-radius: 12px; 
+            display: flex; align-items: center; justify-content: center; gap: 25px;
         }
-        .reveal-char { font-size: 3em; color: #D4A017; margin: 0; line-height: 1; font-family: 'Kaiti', 'STKaiti', serif; }
-        .reveal-pinyin { font-size: 1.2em; color: #D4A017; font-weight: 800; text-align: center; display: flex; flex-direction: column; }
+        .reveal-char { font-size: 3.2em; color: #D4A017; margin: 0; line-height: 1; font-family: 'Kaiti', 'STKaiti', serif; }
+        .reveal-pinyin { font-size: 1.25em; color: #D4A017; font-weight: 800; text-align: center; display: flex; flex-direction: column; }
         .reveal-tone-note { font-size: 0.75em; color: #B8860B; font-weight: 700; margin-top: 2px;}
-        .reveal-meaning { font-size: 1.1em; color: #8B6508; font-weight: 700; }
+        .reveal-meaning { font-size: 1.15em; color: #8B6508; font-weight: 800; }
 
         .nav-buttons { display: flex; gap: 12px; }
         .nav-buttons .btn { margin-bottom: 0; }
 
-        /* --- CỬA SỔ CHÚ CÚN (RIGHT PANEL) --- */
+        /* RIGHT PANEL (PET) */
         .pet-image-container {
-            width: 220px; height: 220px; background-color: white;
-            border-radius: 50%; border: 6px solid #FFE4E1; overflow: hidden;
-            display: flex; justify-content: center; align-items: center;
+            width: 220px; height: 220px; background-color: white; border-radius: 50%; border: 6px solid #FFE4E1;
+            overflow: hidden; display: flex; justify-content: center; align-items: center;
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); margin-bottom: 20px;
         }
         .pet-image { width: 100%; height: 100%; object-fit: cover; }
+        .pet-status { font-weight: 800; color: var(--primary); font-size: 1.25em; min-height: 1.5em; margin-bottom: 15px;}
         
-        .pet-status { font-weight: 800; color: var(--primary); font-size: 1.2em; min-height: 1.5em; margin-bottom: 10px;}
         .stats-box { background: #F8F9FA; border-radius: 16px; padding: 15px; width: 100%; border: 2px solid #E9ECEF;}
         .stat-line { display: flex; justify-content: space-between; font-weight: 800; color: #555; margin-bottom: 5px; font-size: 1.1em;}
         .stat-val.fire { color: #FFA07A; }
         .stat-val.score { color: var(--secondary-dark); }
+        .top-bar { display: flex; justify-content: space-between; margin-bottom: 12px; color: #A0A0A0; font-weight: 800; font-size: 1.05em;}
 
-        /* Top Bar */
-        .top-bar { display: flex; justify-content: space-between; margin-bottom: 12px; color: #A0A0A0; font-weight: 800; font-size: 1em;}
-        
         /* Bảng xếp hạng */
-        .leaderboard-list { text-align: left; width: 100%; margin-top: 15px; list-style: none; }
-        .leaderboard-list li { background: #F8F9FA; padding: 10px 15px; border-radius: 12px; margin-bottom: 8px; font-weight: 700; color: #555; display: flex; justify-content: space-between; }
+        .leaderboard-list { text-align: left; width: 100%; margin-top: 15px; list-style: none; margin-bottom: 20px;}
+        .leaderboard-list li { background: #F8F9FA; padding: 12px 15px; border-radius: 12px; margin-bottom: 8px; font-weight: 800; color: #555; display: flex; justify-content: space-between; }
         .leaderboard-list li.highlight { background: #FFE4E1; color: var(--primary-dark); border: 2px solid var(--primary); }
+
+        @media (max-width: 768px) {
+            body { height: auto; overflow-y: auto; padding: 15px; }
+            .app-container { height: auto; min-height: 100vh; }
+            .game-layout { flex-direction: column; }
+        }
 
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 50% { transform: translateX(5px); } 75% { transform: translateX(-5px); } }
         @keyframes pulseGlow { 0% { box-shadow: 0 0 0 0 rgba(118, 174, 107, 0.5); } 70% { box-shadow: 0 0 0 10px rgba(118, 174, 107, 0); } 100% { box-shadow: 0 0 0 0 rgba(118, 174, 107, 0); } }
@@ -159,151 +177,249 @@
 
 <div class="app-container">
 
-    <div class="panel left-panel">
+    <div class="panel center-panel screen active" id="welcome-screen">
+        <div class="game-title-en">Paws & Tones</div>
+        <div class="game-title-vn">Luyện thanh điệu,<br>chăm cún yêu</div>
+        <div class="game-intro">Nghe và chọn đúng để cho cún ăn nhé!</div>
         
-        <div class="screen active" id="home-screen" style="flex-direction: column; justify-content: center;">
-            <div style="text-align: center; margin-bottom: 20px;">
-                <h1>華語聲調大挑戰</h1>
-                <p class="subtitle">Luyện tập thanh điệu tiếng Trung</p>
+        <img src="assets/dog_idle.gif" class="welcome-pet" alt="Cute Puppy" onerror="this.src='https://via.placeholder.com/180/FFE4E1/FF8F9C?text=Puppy'">
+        
+        <input type="text" id="player-name" class="input-name" placeholder="Tên của bạn / Your name..." autocomplete="off">
+        <button class="btn" onclick="goToSettings()">Bắt đầu / Start</button>
+    </div>
+
+    <div class="panel center-panel screen" id="settings-screen">
+        <h1 style="margin-bottom: 25px; color: var(--secondary-dark);">Game Settings</h1>
+        
+        <div class="setting-group">
+            <span class="setting-label">1. Ngôn ngữ / Language:</span>
+            <div class="toggle-container">
+                <button class="toggle-btn active" id="lang-vn" onclick="setLang('vn')">Tiếng Việt</button>
+                <button class="toggle-btn" id="lang-en" onclick="setLang('en')">English</button>
             </div>
-            <input type="text" id="player-name" class="input-name" placeholder="Nhập tên của bạn..." autocomplete="off">
-            <button class="btn" onclick="startGame(1)">Level 1: 單音節</button>
-            <button class="btn level2" onclick="startGame(2)">Level 2: 雙音節與變調</button>
         </div>
 
-        <div class="screen" id="game-screen" style="flex-direction: column; height: 100%;">
+        <div class="setting-group">
+            <span class="setting-label" id="lbl-level">2. Cấp độ / Level:</span>
+            <div class="toggle-container">
+                <button class="toggle-btn active" id="lv-1" onclick="setLevel(1)">Level 1</button>
+                <button class="toggle-btn" id="lv-2" onclick="setLevel(2)">Level 2</button>
+            </div>
+        </div>
+
+        <div class="setting-group">
+            <span class="setting-label" id="lbl-mode">3. Chế độ / Mode:</span>
+            <div class="toggle-container">
+                <button class="toggle-btn active" id="mode-relax" onclick="setMode('relax')">Thư giãn</button>
+                <button class="toggle-btn" id="mode-speed" onclick="setMode('speed')">5 Giây</button>
+            </div>
+        </div>
+
+        <button class="btn btn-green" id="btn-play-now" style="margin-top: 15px;" onclick="startGame()">Chơi ngay!</button>
+        <button class="btn btn-secondary" id="btn-back" onclick="switchScreen('welcome-screen')">Quay lại</button>
+    </div>
+
+    <div class="game-layout screen" id="game-screen">
+        <div class="panel left-panel">
+            <div class="timer-bar-bg" id="timer-bg"><div class="timer-bar-fill" id="timer-fill"></div></div>
+            
             <div class="top-bar">
                 <span id="level-display" style="background: #F1F3F5; padding: 4px 12px; border-radius: 12px; color: var(--secondary-dark);">Level 1</span>
                 <span id="progress-text">1 / 10</span>
             </div>
             
-            <div class="vocab-image-container">
-                <img id="vocab-img" class="vocab-image" src="" alt="Vocabulary">
-            </div>
+            <div class="vocab-image-container"><img id="vocab-img" class="vocab-image" src="" alt="Vocabulary"></div>
             
-            <button class="btn" style="background-color: var(--correct); box-shadow: 0 5px 0 var(--correct-dark); padding: 10px;" onclick="playSound()">🔊 聽發音 / Nghe lại</button>
+            <button class="btn btn-green" id="btn-listen" style="padding: 10px;" onclick="playSound()">🔊 Nghe lại</button>
             
             <div class="options-grid" id="options-container"></div>
             
             <div class="answer-reveal-wrapper" id="answer-reveal-wrapper">
-                <div class="warning-banner" id="warning-banner">連續答錯兩次！這是正確答案 👀</div>
+                <div class="warning-banner" id="warning-banner">Liên tiếp sai 2 lần! Đây là đáp án:</div>
                 <div class="answer-reveal">
                     <div class="reveal-char" id="reveal-char">大</div>
                     <div class="reveal-pinyin">
                         <span id="reveal-pinyin-text">dà</span>
-                        <span class="reveal-tone-note" id="reveal-tone-note">(Tone 4)</span>
+                        <span class="reveal-tone-note" id="reveal-tone-note">(Thanh 4)</span>
                     </div>
                     <div class="reveal-meaning" id="reveal-meaning">big</div>
                 </div>
             </div>
             
             <div class="nav-buttons">
-                <button class="btn btn-secondary" onclick="location.reload()">Bỏ cuộc</button>
-                <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">下一題 ➔</button>
+                <button class="btn btn-secondary" id="btn-quit" onclick="location.reload()">Bỏ cuộc</button>
+                <button class="btn" id="next-btn" style="display:none;" onclick="nextQuestion()">Tiếp tục ➔</button>
             </div>
         </div>
 
-        <div class="screen" id="end-screen" style="flex-direction: column; justify-content: center; align-items: center;">
-            <h1>Hoàn thành!</h1>
-            <p class="subtitle">Kết quả học tập của bạn</p>
+        <div class="panel right-panel">
+            <div class="pet-image-container">
+                <img id="pet-img" class="pet-image" src="assets/dog_idle.gif" alt="Puppy NPC" onerror="this.src='https://via.placeholder.com/220/FFE4E1/FF8F9C?text=Pet'">
+            </div>
+            <div class="pet-status" id="pet-status">Cún đang đợi bạn...</div>
             
-            <ul class="leaderboard-list" id="leaderboard-list">
-                </ul>
-
-            <button class="btn" style="margin-top: 20px;" onclick="location.reload()">Chơi lại từ đầu ↺</button>
+            <div class="stats-box">
+                <div class="stat-line"><span id="lbl-score">Điểm số:</span> <span class="stat-val score" id="score-display">0</span></div>
+                <div class="stat-line"><span id="lbl-streak">Chuỗi đúng:</span> <span class="stat-val fire" id="streak-display">0</span></div>
+            </div>
         </div>
     </div>
 
-    <div class="panel right-panel">
-        <div class="pet-image-container">
-            <img id="pet-img" class="pet-image" src="assets/dog_idle.gif" alt="Puppy NPC" onerror="this.src='https://via.placeholder.com/220/FFE4E1/FF8F9C?text=Pet+GIF'">
-        </div>
-        <div class="pet-status" id="pet-status">Xin chào! Cùng học nhé!</div>
-        
-        <div class="stats-box">
-            <div class="stat-line"><span>Điểm số:</span> <span class="stat-val score" id="score-display">0</span></div>
-            <div class="stat-line"><span>Liên kích:</span> <span class="stat-val fire" id="streak-display">0</span></div>
-        </div>
+    <div class="panel center-panel screen" id="end-screen">
+        <h1 id="end-title">Hoàn thành!</h1>
+        <p class="game-intro" id="end-subtitle">Cún con rất no bụng và hạnh phúc.</p>
+        <ul class="leaderboard-list" id="leaderboard-list"></ul>
+        <button class="btn btn-green" id="btn-replay" onclick="location.reload()">Chơi lại từ đầu ↺</button>
     </div>
 
 </div>
 
 <script>
-    // 📚 DATA TỪ VỰNG (LEVEL 1 & LEVEL 2)
+    // --- 1. HỆ THỐNG ĐA NGÔN NGỮ (i18n) ---
+    const i18n = {
+        vn: {
+            lblLevel: "2. Cấp độ:", lblMode: "3. Chế độ:",
+            btnRelax: "Thư giãn", btnSpeed: "5 Giây", btnPlay: "Chơi ngay!", btnBack: "Quay lại",
+            btnListen: "🔊 Nghe lại", btnQuit: "Bỏ cuộc", btnNext: "Tiếp tục ➔", btnReplay: "Chơi lại từ đầu ↺",
+            petIdle: "Cún đang nghe...", petHappy: "Đúng rồi! Ngon quá!", petSad: "Sai rồi... cún đói...", petCry: "Huhu khó quá!", petEnd: "Tuyệt vời! Cún no rồi!",
+            lblScore: "Điểm số:", lblStreak: "Chuỗi đúng:",
+            warnFail: "Đã sai 2 lần! Đây là đáp án đúng 👀", warnTime: "Hết giờ! Đây là đáp án đúng ⏱️",
+            endTitle: "Hoàn thành!", endSub: "Cún con rất no bụng và hạnh phúc."
+        },
+        en: {
+            lblLevel: "2. Select Level:", lblMode: "3. Select Mode:",
+            btnRelax: "Relaxed", btnSpeed: "5 Seconds", btnPlay: "Play Now!", btnBack: "Back",
+            btnListen: "🔊 Listen again", btnQuit: "Quit", btnNext: "Next ➔", btnReplay: "Play Again ↺",
+            petIdle: "Puppy is listening...", petHappy: "Yummy! Puppy is happy!", petSad: "Wrong... puppy is hungry...", petCry: "So hard! Puppy is crying!", petEnd: "Awesome! Puppy is full!",
+            lblScore: "Score:", lblStreak: "Combo:",
+            warnFail: "2 mistakes! Here is the answer 👀", warnTime: "Time's up! Here is the answer ⏱️",
+            endTitle: "Well Done!", endSub: "The puppy is very full and happy."
+        }
+    };
+
+    // --- 2. DỮ LIỆU TỪ VỰNG (Chuẩn Pinyin Đài Loan) ---
     const level1Data = [
-        { ch: "大", meaning: "big", pinyin: "dà", tones: ["dā", "dá", "dǎ", "dà"], correct: 3, toneNote: "Tone 4", imgFile: "da.jpg" },
-        { ch: "小", meaning: "small", pinyin: "xiǎo", tones: ["xiāo", "xiáo", "xiǎo", "xiào"], correct: 2, toneNote: "Tone 3", imgFile: "xiao.jpg" },
-        { ch: "好", meaning: "good", pinyin: "hǎo", tones: ["hāo", "háo", "hǎo", "hào"], correct: 2, toneNote: "Tone 3", imgFile: "hao.jpg" },
-        { ch: "新", meaning: "new", pinyin: "xīn", tones: ["xīn", "xín", "xǐn", "xìn"], correct: 0, toneNote: "Tone 1", imgFile: "xin.jpg" },
-        { ch: "忙", meaning: "busy", pinyin: "máng", tones: ["māng", "máng", "mǎng", "màng"], correct: 1, toneNote: "Tone 2", imgFile: "mang.jpg" },
-        { ch: "紅", meaning: "red", pinyin: "hóng", tones: ["hōng", "hóng", "hǒng", "hòng"], correct: 1, toneNote: "Tone 2", imgFile: "hong.jpg" },
-        { ch: "黑", meaning: "black", pinyin: "hēi", tones: ["hēi", "héi", "hěi", "hèi"], correct: 0, toneNote: "Tone 1", imgFile: "hei.jpg" },
-        { ch: "冷", meaning: "cold", pinyin: "lěng", tones: ["lēng", "léng", "lěng", "lèng"], correct: 2, toneNote: "Tone 3", imgFile: "leng.jpg" },
-        { ch: "熱", meaning: "hot", pinyin: "rè", tones: ["rē", "ré", "rě", "rè"], correct: 3, toneNote: "Tone 4", imgFile: "re.jpg" },
-        { ch: "酸", meaning: "sour", pinyin: "suān", tones: ["suān", "suán", "suǎn", "suàn"], correct: 0, toneNote: "Tone 1", imgFile: "suan.jpg" },
-        { ch: "貴", meaning: "expensive", pinyin: "guì", tones: ["guī", "guí", "guǐ", "guì"], correct: 3, toneNote: "Tone 4", imgFile: "gui.jpg" }
+        { ch: "大", meaningVN: "to lớn", meaningEN: "big", pinyin: "dà", tones: ["dā", "dá", "dǎ", "dà"], correct: 3, noteVN: "Thanh 4", noteEN: "Tone 4", imgFile: "da.jpg" },
+        { ch: "小", meaningVN: "nhỏ bé", meaningEN: "small", pinyin: "xiǎo", tones: ["xiāo", "xiáo", "xiǎo", "xiào"], correct: 2, noteVN: "Thanh 3", noteEN: "Tone 3", imgFile: "xiao.jpg" },
+        { ch: "好", meaningVN: "tốt, đẹp", meaningEN: "good", pinyin: "hǎo", tones: ["hāo", "háo", "hǎo", "hào"], correct: 2, noteVN: "Thanh 3", noteEN: "Tone 3", imgFile: "hao.jpg" },
+        { ch: "新", meaningVN: "mới", meaningEN: "new", pinyin: "xīn", tones: ["xīn", "xín", "xǐn", "xìn"], correct: 0, noteVN: "Thanh 1", noteEN: "Tone 1", imgFile: "xin.jpg" },
+        { ch: "忙", meaningVN: "bận rộn", meaningEN: "busy", pinyin: "máng", tones: ["māng", "máng", "mǎng", "màng"], correct: 1, noteVN: "Thanh 2", noteEN: "Tone 2", imgFile: "mang.jpg" },
+        { ch: "紅", meaningVN: "màu đỏ", meaningEN: "red", pinyin: "hóng", tones: ["hōng", "hóng", "hǒng", "hòng"], correct: 1, noteVN: "Thanh 2", noteEN: "Tone 2", imgFile: "hong.jpg" },
+        { ch: "黑", meaningVN: "màu đen", meaningEN: "black", pinyin: "hēi", tones: ["hēi", "héi", "hěi", "hèi"], correct: 0, noteVN: "Thanh 1", noteEN: "Tone 1", imgFile: "hei.jpg" },
+        { ch: "冷", meaningVN: "lạnh", meaningEN: "cold", pinyin: "lěng", tones: ["lēng", "léng", "lěng", "lèng"], correct: 2, noteVN: "Thanh 3", noteEN: "Tone 3", imgFile: "leng.jpg" },
+        { ch: "熱", meaningVN: "nóng", meaningEN: "hot", pinyin: "rè", tones: ["rē", "ré", "rě", "rè"], correct: 3, noteVN: "Thanh 4", noteEN: "Tone 4", imgFile: "re.jpg" },
+        { ch: "酸", meaningVN: "chua", meaningEN: "sour", pinyin: "suān", tones: ["suān", "suán", "suǎn", "suàn"], correct: 0, noteVN: "Thanh 1", noteEN: "Tone 1", imgFile: "suan.jpg" },
+        { ch: "貴", meaningVN: "đắt đỏ", meaningEN: "expensive", pinyin: "guì", tones: ["guī", "guí", "guǐ", "guì"], correct: 3, noteVN: "Thanh 4", noteEN: "Tone 4", imgFile: "gui.jpg" }
     ];
 
     const level2Data = [
-        { ch: "高興", meaning: "happy", pinyin: "gāo xìng", tones: ["gāo xīng", "gāo xíng", "gāo xǐng", "gāo xìng"], correct: 3, toneNote: "Tone 1 + 4", imgFile: "gaoxing.jpg" },
-        { ch: "便宜", meaning: "cheap", pinyin: "pián yí", tones: ["piān yí", "pián yí", "piǎn yí", "piàn yí"], correct: 1, toneNote: "Tone 2 + 2", imgFile: "pianyi.jpg" },
-        { ch: "很好", meaning: "very good", pinyin: "hěn hǎo", tones: ["hěn hǎo", "hén hǎo", "hèn hǎo", "hēn hǎo"], correct: 0, toneNote: "Tone 3 + 3 (Biến điệu)", imgFile: "henhao.jpg" },
-        { ch: "不錯", meaning: "not bad", pinyin: "bú cuò", tones: ["bù cuò", "bú cuò", "bǔ cuò", "bū cuò"], correct: 1, toneNote: "Tone 4 -> 2 + 4", imgFile: "bucuo.jpg" },
-        { ch: "好看", meaning: "good-looking", pinyin: "hǎo kàn", tones: ["hāo kàn", "háo kàn", "hǎo kàn", "hào kàn"], correct: 2, toneNote: "Tone 3 + 4", imgFile: "haokan.jpg" },
-        { ch: "漂亮", meaning: "pretty", pinyin: "piào liàng", tones: ["piāo liàng", "piáo liàng", "piǎo liàng", "piào liàng"], correct: 3, toneNote: "Tone 4 + 4", imgFile: "piaoliang.jpg" },
-        { ch: "難聽", meaning: "awful (sound)", pinyin: "nán tīng", tones: ["nān tīng", "nán tīng", "nǎn tīng", "nàn tīng"], correct: 1, toneNote: "Tone 2 + 1", imgFile: "nanting.jpg" },
-        { ch: "突然", meaning: "sudden", pinyin: "tú rán", tones: ["tū rán", "tú rán", "tǔ rán", "tù rán"], correct: 1, toneNote: "Tone 2 + 2", imgFile: "turan.jpg" },
-        { ch: "無聊", meaning: "boring", pinyin: "wú liáo", tones: ["wū liáo", "wú liáo", "wǔ liáo", "wù liáo"], correct: 1, toneNote: "Tone 2 + 2", imgFile: "wuliao.jpg" },
-        { ch: "危險", meaning: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 0, toneNote: "Tone 1 + 3", imgFile: "weixian.jpg" },
-        { ch: "糟糕", meaning: "terrible", pinyin: "zāo gāo", tones: ["zāo gāo", "záo gāo", "zǎo gāo", "zào gāo"], correct: 0, toneNote: "Tone 1 + 1", imgFile: "zaogao.jpg" }
+        { ch: "高興", meaningVN: "vui vẻ", meaningEN: "happy", pinyin: "gāo xìng", tones: ["gāo xīng", "gāo xíng", "gāo xǐng", "gāo xìng"], correct: 3, noteVN: "Thanh 1 + Thanh 4", noteEN: "Tone 1 + Tone 4", imgFile: "gaoxing.jpg" },
+        { ch: "便宜", meaningVN: "rẻ", meaningEN: "cheap", pinyin: "pián yí", tones: ["piān yí", "pián yí", "piǎn yí", "piàn yí"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "pianyi.jpg" },
+        { ch: "很好", meaningVN: "rất tốt", meaningEN: "very good", pinyin: "hěn hǎo", tones: ["hěn hǎo", "hén hǎo", "hèn hǎo", "hēn hǎo"], correct: 0, noteVN: "Thanh 3 + Thanh 3 / Biến điệu", noteEN: "Tone 3 + Tone 3 / Sandhi", imgFile: "henhao.jpg" },
+        { ch: "不錯", meaningVN: "không tồi", meaningEN: "not bad", pinyin: "bú cuò", tones: ["bù cuò", "bú cuò", "bǔ cuò", "bū cuò"], correct: 1, noteVN: "Thanh 2 + Thanh 4 / Biến điệu", noteEN: "Tone 2 + Tone 4 / Sandhi", imgFile: "bucuo.jpg" },
+        { ch: "好看", meaningVN: "đẹp", meaningEN: "good-looking", pinyin: "hǎo kàn", tones: ["hāo kàn", "háo kàn", "hǎo kàn", "hào kàn"], correct: 2, noteVN: "Thanh 3 + Thanh 4", noteEN: "Tone 3 + Tone 4", imgFile: "haokan.jpg" },
+        { ch: "漂亮", meaningVN: "xinh đẹp", meaningEN: "pretty", pinyin: "piào liàng", tones: ["piāo liàng", "piáo liàng", "piǎo liàng", "piào liàng"], correct: 3, noteVN: "Thanh 4 + Thanh 4", noteEN: "Tone 4 + Tone 4", imgFile: "piaoliang.jpg" },
+        { ch: "難聽", meaningVN: "khó nghe", meaningEN: "awful", pinyin: "nán tīng", tones: ["nān tīng", "nán tīng", "nǎn tīng", "nàn tīng"], correct: 1, noteVN: "Thanh 2 + Thanh 1", noteEN: "Tone 2 + Tone 1", imgFile: "nanting.jpg" },
+        { ch: "突然", meaningVN: "đột nhiên", meaningEN: "sudden", pinyin: "tú rán", tones: ["tū rán", "tú rán", "tǔ rán", "tù rán"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "turan.jpg" },
+        { ch: "無聊", meaningVN: "nhàm chán", meaningEN: "boring", pinyin: "wú liáo", tones: ["wū liáo", "wú liáo", "wǔ liáo", "wù liáo"], correct: 1, noteVN: "Thanh 2 + Thanh 2", noteEN: "Tone 2 + Tone 2", imgFile: "wuliao.jpg" },
+        { ch: "危險", meaningVN: "nguy hiểm", meaningEN: "dangerous", pinyin: "wēi xiǎn", tones: ["wēi xiǎn", "wéi xiǎn", "wěi xiǎn", "wèi xiǎn"], correct: 0, noteVN: "Thanh 1 + Thanh 3", noteEN: "Tone 1 + Tone 3", imgFile: "weixian.jpg" },
+        { ch: "糟糕", meaningVN: "tồi tệ", meaningEN: "terrible", pinyin: "zāo gāo", tones: ["zāo gāo", "záo gāo", "zǎo gāo", "zào gāo"], correct: 0, noteVN: "Thanh 1 + Thanh 1", noteEN: "Tone 1 + Tone 1", imgFile: "zaogao.jpg" }
     ];
 
-    let playerName = "Người chơi Ẩn danh";
+    // --- 3. BIẾN TRẠNG THÁI GAME ---
+    let playerName = "Guest";
+    let currentLang = 'vn';
+    let selectedLevel = 1;
+    let isSpeedMode = false;
+    
     let currentQuestions = [];
     let currentIndex = 0;
     let wrongAttempts = 0; 
     let streak = 0;
     let score = 0;
     let isLocked = false;
-    let currentLevelName = "";
+    let timerInterval;
 
+    // --- 4. HÀM ĐIỀU KHIỂN ---
     function switchScreen(screenId) {
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(screenId).classList.add('active');
     }
 
-    function startGame(level) {
+    function goToSettings() {
         const nameInput = document.getElementById('player-name').value.trim();
         if(nameInput !== "") playerName = nameInput;
+        switchScreen('settings-screen');
+        applyLanguage(currentLang);
+    }
 
-        currentLevelName = level === 1 ? "Level 1" : "Level 2";
-        currentQuestions = level === 1 ? [...level1Data] : [...level2Data];
+    // Setters cho Màn hình Cấu hình
+    function setLang(lang) {
+        currentLang = lang;
+        document.getElementById('lang-vn').classList.toggle('active', lang === 'vn');
+        document.getElementById('lang-en').classList.toggle('active', lang === 'en');
+        applyLanguage(lang);
+    }
+    function setLevel(lv) {
+        selectedLevel = lv;
+        document.getElementById('lv-1').classList.toggle('active', lv === 1);
+        document.getElementById('lv-2').classList.toggle('active', lv === 2);
+    }
+    function setMode(mode) {
+        isSpeedMode = (mode === 'speed');
+        document.getElementById('mode-relax').classList.toggle('active', !isSpeedMode);
+        document.getElementById('mode-speed').classList.toggle('active', isSpeedMode);
+    }
+
+    function applyLanguage(lang) {
+        const t = i18n[lang];
+        document.getElementById('lbl-level').innerText = t.lblLevel;
+        document.getElementById('lbl-mode').innerText = t.lblMode;
+        document.getElementById('mode-relax').innerText = t.btnRelax;
+        document.getElementById('mode-speed').innerText = t.btnSpeed;
+        document.getElementById('btn-play-now').innerText = t.btnPlay;
+        document.getElementById('btn-back').innerText = t.btnBack;
+        document.getElementById('btn-listen').innerText = t.btnListen;
+        document.getElementById('btn-quit').innerText = t.btnQuit;
+        document.getElementById('btn-next').innerText = t.btnNext;
+        document.getElementById('btn-replay').innerText = t.btnReplay;
+        document.getElementById('lbl-score').innerText = t.lblScore;
+        document.getElementById('lbl-streak').innerText = t.lblStreak;
+        document.getElementById('end-title').innerText = t.endTitle;
+        document.getElementById('end-subtitle').innerText = t.endSub;
+        if(!isLocked) document.getElementById('pet-status').innerText = t.petIdle;
+    }
+
+    // Khởi động Game
+    function startGame() {
+        switchScreen('game-screen');
+        currentQuestions = selectedLevel === 1 ? [...level1Data] : [...level2Data];
         currentQuestions.sort(() => Math.random() - 0.5); 
         
         currentIndex = 0; streak = 0; score = 0;
-        document.getElementById('level-display').innerText = currentLevelName;
+        document.getElementById('level-display').innerText = `Level ${selectedLevel}`;
+        document.getElementById('timer-bg').style.display = isSpeedMode ? "block" : "none";
         
-        switchScreen('game-screen');
         loadQuestion();
     }
 
     function loadQuestion() {
         isLocked = false; wrongAttempts = 0;
+        clearInterval(timerInterval);
         const q = currentQuestions[currentIndex];
+        const t = i18n[currentLang];
         
         document.getElementById('progress-text').innerText = `${currentIndex + 1} / ${currentQuestions.length}`;
         document.getElementById('answer-reveal-wrapper').classList.remove('active');
         document.getElementById('warning-banner').style.display = "none";
         document.getElementById('next-btn').style.display = "none";
         
-        // Tải ảnh (object-fit: contain tự động xử lý cắt viền)
         const vocabImg = document.getElementById('vocab-img');
         vocabImg.src = `assets/${q.imgFile}`;
         vocabImg.style.display = 'block';
 
         updatePetState('idle');
 
-        // Tạo nút chọn Pinyin
         const optionsContainer = document.getElementById('options-container');
         optionsContainer.innerHTML = "";
         q.tones.forEach((pinyin, index) => {
@@ -314,57 +430,83 @@
             optionsContainer.appendChild(btn);
         });
 
+        // Tự động phát âm thanh khi mở câu hỏi
         playSound();
+
+        // Khởi động Timer nếu chọn 5s
+        if (isSpeedMode) {
+            let timeLeft = 50; // 5.0 seconds (50 * 100ms)
+            const fill = document.getElementById('timer-fill');
+            fill.style.width = '100%'; fill.style.backgroundColor = 'var(--correct)';
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                fill.style.width = `${(timeLeft/50)*100}%`;
+                if(timeLeft <= 20) fill.style.backgroundColor = 'var(--wrong)'; // Đỏ khi còn 2s
+                
+                if(timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut(q, t);
+                }
+            }, 100);
+        }
     }
 
+    function handleTimeOut(q, t) {
+        if (isLocked) return;
+        isLocked = true; streak = 0;
+        updatePetState('cry');
+        
+        const buttons = document.querySelectorAll('.option-btn');
+        buttons.forEach((btn, idx) => {
+            if (idx !== q.correct) btn.classList.add('faded');
+            else btn.classList.add('glowing');
+        });
+        showAnswerReveal(q, true, t.warnTime);
+    }
+
+    // HÀM ÉP PHÁT ÂM THANH (Chống kẹt)
     function playSound() {
-        const q = currentQuestions[currentIndex];
-        let utterance = new SpeechSynthesisUtterance(q.ch);
-        utterance.lang = "zh-TW";
-        utterance.rate = 0.85; 
-        speechSynthesis.speak(utterance);
+        window.speechSynthesis.cancel(); // Hủy giọng cũ bị kẹt
+        setTimeout(() => {
+            const q = currentQuestions[currentIndex];
+            let utterance = new SpeechSynthesisUtterance(q.ch);
+            utterance.lang = "zh-TW";
+            utterance.rate = 0.85; 
+            window.speechSynthesis.speak(utterance);
+        }, 150);
     }
 
     function updatePetState(state) {
         const petImg = document.getElementById('pet-img');
         const petStatus = document.getElementById('pet-status');
+        const t = i18n[currentLang];
         
-        if (state === 'idle') {
-            petImg.src = "assets/dog_idle.gif";
-            petStatus.innerText = "Cún đang nghe...";
-            petStatus.style.color = "var(--text-main)";
-        } else if (state === 'happy') {
-            petImg.src = "assets/dog_happy.gif";
-            petStatus.innerText = "Đúng rồi! Ngon quá!";
-            petStatus.style.color = "var(--correct-dark)";
-        } else if (state === 'sad') {
-            petImg.src = "assets/dog_sad.gif";
-            petStatus.innerText = "Sai rồi... cún đói...";
-            petStatus.style.color = "var(--secondary-dark)";
-        } else if (state === 'cry') {
-            petImg.src = "assets/dog_cry.gif";
-            petStatus.innerText = "Huhu khó quá!";
-            petStatus.style.color = "var(--wrong)";
-        }
+        if (state === 'idle') { petImg.src = "assets/dog_idle.gif"; petStatus.innerText = t.petIdle; petStatus.style.color = "var(--text-main)"; }
+        else if (state === 'happy') { petImg.src = "assets/dog_happy.gif"; petStatus.innerText = t.petHappy; petStatus.style.color = "var(--correct-dark)"; }
+        else if (state === 'sad') { petImg.src = "assets/dog_sad.gif"; petStatus.innerText = t.petSad; petStatus.style.color = "var(--secondary-dark)"; }
+        else if (state === 'cry') { petImg.src = "assets/dog_cry.gif"; petStatus.innerText = t.petCry; petStatus.style.color = "var(--wrong)"; }
+        
         document.getElementById('streak-display').innerText = streak;
         document.getElementById('score-display').innerText = score;
     }
 
     function checkAnswer(selectedIndex, btnElement) {
         if (isLocked) return;
+        clearInterval(timerInterval); // Dừng đếm giờ
+        
         const q = currentQuestions[currentIndex];
+        const t = i18n[currentLang];
         const buttons = document.querySelectorAll('.option-btn');
         
         if (selectedIndex === q.correct) {
             btnElement.classList.add('correct');
-            streak++;
-            score += (100 + streak * 10); // Tính điểm có bonus combo
+            streak++; score += (100 + streak * 10);
             isLocked = true;
             updatePetState('happy');
-            showAnswerReveal(q, false);
+            showAnswerReveal(q, false, "");
         } else {
-            wrongAttempts++;
-            streak = 0;
+            wrongAttempts++; streak = 0;
             btnElement.classList.add('wrong');
             setTimeout(() => { btnElement.classList.remove('wrong'); }, 400); 
             btnElement.disabled = true;
@@ -375,56 +517,55 @@
                 isLocked = true;
                 updatePetState('cry');
                 
-                // HIỆU ỨNG SAI 2 LẦN: Làm mờ tất cả, Nhấp nháy đáp án đúng
                 buttons.forEach((btn, idx) => {
                     if (idx !== q.correct) btn.classList.add('faded');
                     else btn.classList.add('glowing');
                 });
-                
-                showAnswerReveal(q, true);
+                showAnswerReveal(q, true, t.warnFail);
             }
         }
     }
 
-    function showAnswerReveal(q, isWarning) {
+    function showAnswerReveal(q, isWarning, warningText) {
         document.getElementById('reveal-char').innerText = q.ch;
         document.getElementById('reveal-pinyin-text').innerText = q.pinyin;
-        document.getElementById('reveal-tone-note').innerText = `(${q.toneNote})`;
-        document.getElementById('reveal-meaning').innerText = q.meaning;
+        document.getElementById('reveal-tone-note').innerText = currentLang === 'vn' ? q.noteVN : q.noteEN;
+        document.getElementById('reveal-meaning').innerText = currentLang === 'vn' ? q.meaningVN : q.meaningEN;
         
-        // Hiện cảnh báo đỏ nếu sai 2 lần
-        document.getElementById('warning-banner').style.display = isWarning ? "block" : "none";
+        const warnBanner = document.getElementById('warning-banner');
+        warnBanner.innerText = warningText;
+        warnBanner.style.display = isWarning ? "block" : "none";
         
-        // Hiện khung đáp án (nhưng xóa border trên nếu có banner để trông liền mạch)
         const revealBox = document.querySelector('.answer-reveal');
         revealBox.style.borderRadius = isWarning ? "0 0 12px 12px" : "12px";
         revealBox.style.borderTop = isWarning ? "none" : "2px dashed #FFD700";
 
         document.getElementById('answer-reveal-wrapper').classList.add('active');
         document.getElementById('next-btn').style.display = "block";
+        
+        // Tự động phát âm thanh lại khi công bố đáp án
+        playSound();
     }
 
     function nextQuestion() {
         currentIndex++;
-        if (currentIndex < currentQuestions.length) {
-            loadQuestion();
-        } else {
-            endGame();
-        }
+        if (currentIndex < currentQuestions.length) loadQuestion();
+        else endGame();
     }
 
     function endGame() {
         switchScreen('end-screen');
         updatePetState('happy');
-        document.getElementById('pet-status').innerText = "Tuyệt vời! Cún no rồi!";
+        document.getElementById('pet-status').innerText = i18n[currentLang].petEnd;
         saveLeaderboard();
     }
 
     function saveLeaderboard() {
         let lb = JSON.parse(localStorage.getItem('puppyToneLeaderboard')) || [];
-        lb.push({ name: playerName, score: score, level: currentLevelName });
+        const modeTxt = isSpeedMode ? "5s" : "Relax";
+        lb.push({ name: playerName, score: score, level: `L${selectedLevel} ${modeTxt}` });
         lb.sort((a, b) => b.score - a.score);
-        lb = lb.slice(0, 5); // Lưu top 5
+        lb = lb.slice(0, 5); 
         localStorage.setItem('puppyToneLeaderboard', JSON.stringify(lb));
         
         const listEl = document.getElementById('leaderboard-list');
@@ -432,7 +573,7 @@
         lb.forEach((entry, idx) => {
             const li = document.createElement('li');
             if (entry.name === playerName && entry.score === score) li.classList.add('highlight');
-            li.innerHTML = `<span>#${idx+1} ${entry.name} [${entry.level}]</span> <span>${entry.score} pts</span>`;
+            li.innerHTML = `<span>#${idx+1} ${entry.name} [${entry.level}]</span> <span>${entry.score}</span>`;
             listEl.appendChild(li);
         });
     }
